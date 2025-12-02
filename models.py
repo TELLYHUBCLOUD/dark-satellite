@@ -4,6 +4,7 @@ from bson.objectid import ObjectId
 import os
 from config import Config
 from utils import hash_password, verify_password, generate_roll_number
+
 class Database:
     """Database connection manager"""
     _instance = None
@@ -19,7 +20,14 @@ class Database:
         """Connect to MongoDB"""
         if self._client is None:
             uri = mongo_uri or Config.MONGO_URI
-            self._client = MongoClient(uri)
+            # Serverless-friendly settings with shorter timeouts
+            self._client = MongoClient(
+                uri,
+                serverSelectionTimeoutMS=5000,  # 5 seconds
+                connectTimeoutMS=5000,
+                socketTimeoutMS=5000,
+                maxPoolSize=1  # Limit connections for serverless
+            )
             self._db = self._client[Config.DB_NAME]
         return self._db
     
@@ -35,8 +43,10 @@ class Database:
             self._client.close()
             self._client = None
             self._db = None
+
 # Initialize database
 db_manager = Database()
+
 class Student:
     """Student model"""
     
@@ -111,6 +121,7 @@ class Student:
             {'roll_number': roll_number},
             {'$set': {'exam_taken': True}}
         )
+
 class Question:
     """Question model"""
     
@@ -147,6 +158,7 @@ class Question:
         """Count total questions"""
         db = db_manager.get_db()
         return db.questions.count_documents({})
+
 class Exam:
     """Exam model"""
     
@@ -225,6 +237,7 @@ class Exam:
         """Count completed exams"""
         db = db_manager.get_db()
         return db.exams.count_documents({'status': 'completed'})
+
 class Admin:
     """Admin model"""
     
@@ -260,7 +273,13 @@ class Admin:
     @staticmethod
     def ensure_default_admin():
         """Ensure default admin exists"""
-        db = db_manager.get_db()
-        
-        if db.admins.count_documents({}) == 0:
-            Admin.create(Config.DEFAULT_ADMIN_USERNAME, Config.DEFAULT_ADMIN_PASSWORD)
+        try:
+            db = db_manager.get_db()
+            
+            if db.admins.count_documents({}) == 0:
+                Admin.create(Config.DEFAULT_ADMIN_USERNAME, Config.DEFAULT_ADMIN_PASSWORD)
+        except Exception as e:
+            # In serverless environments, this might fail on cold start
+            # The admin will be created on first successful connection
+            print(f"Could not ensure default admin: {e}")
+            pass
