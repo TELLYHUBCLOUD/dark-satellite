@@ -2,27 +2,21 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 import os
-
 from config import config
 from models import db_manager, Student, Question, Exam, Admin
 from utils import (
     validate_email, validate_phone, calculate_score, 
     calculate_grade, sanitize_input, get_exam_status, format_datetime
 )
-
 # Initialize Flask app
 app = Flask(__name__)
-
 # Load configuration
 env = os.environ.get('FLASK_ENV', 'development')
 app.config.from_object(config[env])
-
 # Initialize database and ensure default admin exists
 db_manager.connect()
 Admin.ensure_default_admin()
-
 # ==================== HELPER FUNCTIONS ====================
-
 def login_required(f):
     """Decorator to require student login"""
     from functools import wraps
@@ -32,7 +26,6 @@ def login_required(f):
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
-
 def admin_required(f):
     """Decorator to require admin login"""
     from functools import wraps
@@ -42,21 +35,16 @@ def admin_required(f):
             return redirect(url_for('admin_login'))
         return f(*args, **kwargs)
     return decorated_function
-
 # ==================== MAIN ROUTES ====================
-
 @app.route('/')
 def index():
     """Landing page"""
     return render_template('index.html')
-
 # ==================== STUDENT ROUTES ====================
-
 @app.route('/register')
 def register_page():
     """Student registration page"""
     return render_template('register.html')
-
 @app.route('/api/register', methods=['POST'])
 def register():
     """Student registration API"""
@@ -96,14 +84,12 @@ def register():
         
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
-
 @app.route('/login')
 def login_page():
     """Student login page"""
     if 'student_roll' in session:
         return redirect(url_for('exam_page'))
     return render_template('login.html')
-
 @app.route('/api/login', methods=['POST'])
 def login():
     """Student login API"""
@@ -143,16 +129,13 @@ def login():
         
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
-
 @app.route('/logout')
 def logout():
     """Student logout"""
     session.pop('student_roll', None)
     session.pop('student_name', None)
     return redirect(url_for('index'))
-
 # ==================== EXAM ROUTES ====================
-
 @app.route('/exam')
 @login_required
 def exam_page():
@@ -168,7 +151,6 @@ def exam_page():
     return render_template('exam.html', 
                          student_name=session.get('student_name'),
                          duration=app.config['EXAM_DURATION_MINUTES'])
-
 @app.route('/api/start_exam', methods=['POST'])
 @login_required
 def start_exam():
@@ -243,7 +225,6 @@ def start_exam():
         
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
-
 @app.route('/api/save_answer', methods=['POST'])
 @login_required
 def save_answer():
@@ -264,7 +245,6 @@ def save_answer():
         
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
-
 @app.route('/api/submit_exam', methods=['POST'])
 @login_required
 def submit_exam():
@@ -303,9 +283,7 @@ def submit_exam():
         
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
-
 # ==================== RESULT ROUTES ====================
-
 @app.route('/result/<roll_number>')
 def result_page(roll_number):
     """View result page"""
@@ -339,16 +317,13 @@ def result_page(roll_number):
         
     except Exception as e:
         return render_template('error.html', message=str(e)), 500
-
 # ==================== ADMIN ROUTES ====================
-
 @app.route('/admin/login')
 def admin_login_page():
     """Admin login page"""
     if 'admin_username' in session:
         return redirect(url_for('admin_dashboard'))
     return render_template('admin_login.html')
-
 @app.route('/api/admin/login', methods=['POST'])
 def admin_login():
     """Admin login API"""
@@ -379,13 +354,11 @@ def admin_login():
         
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
-
 @app.route('/admin/logout')
 def admin_logout():
     """Admin logout"""
     session.pop('admin_username', None)
     return redirect(url_for('admin_login_page'))
-
 @app.route('/admin/dashboard')
 @admin_required
 def admin_dashboard():
@@ -418,7 +391,6 @@ def admin_dashboard():
         
     except Exception as e:
         return render_template('error.html', message=str(e)), 500
-
 @app.route('/api/admin/students')
 @admin_required
 def get_students():
@@ -452,19 +424,14 @@ def get_students():
         
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
-
 # ==================== ERROR HANDLERS ====================
-
 @app.errorhandler(404)
 def not_found(e):
     return render_template('error.html', message='Page not found'), 404
-
 @app.errorhandler(500)
 def server_error(e):
     return render_template('error.html', message='Internal server error'), 500
-
 # ==================== RUN APP ====================
-
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
