@@ -1,22 +1,97 @@
 // Main JavaScript utilities for O Level Exam Portal
 
-// Utility function to show alerts
+// ==================== TOAST NOTIFICATIONS ====================
+
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast alert-${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+// ==================== ALERT SYSTEM ====================
+
 function showAlert(message, type = 'info') {
     const alertContainer = document.getElementById('alert-container');
-    if (!alertContainer) return;
+    if (!alertContainer) {
+        showToast(message, type);
+        return;
+    }
 
     const alertClass = `alert-${type}`;
+    const icons = {
+        success: '✓',
+        error: '✗',
+        warning: '⚠',
+        info: 'ℹ'
+    };
+
     alertContainer.innerHTML = `
-        <div class="alert ${alertClass}">
-            ${message}
+        <div class="alert ${alertClass} scale-in">
+            <span style="font-size: 1.2rem; margin-right: 0.5rem;">${icons[type] || 'ℹ'}</span>
+            <span>${message}</span>
         </div>
     `;
 
     // Auto-hide after 5 seconds
     setTimeout(() => {
-        alertContainer.innerHTML = '';
+        const alert = alertContainer.querySelector('.alert');
+        if (alert) {
+            alert.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 300);
+        }
     }, 5000);
 }
+
+// ==================== LOADING STATES ====================
+
+function setButtonLoading(button, loading) {
+    if (loading) {
+        button.classList.add('loading');
+        button.disabled = true;
+    } else {
+        button.classList.remove('loading');
+        button.disabled = false;
+    }
+}
+
+function showLoader(containerId) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.innerHTML = '<div class="loader"></div>';
+    }
+}
+
+function hideLoader(containerId) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.innerHTML = '';
+    }
+}
+
+// ==================== FORM VALIDATION ====================
+
+function validateInput(input, isValid) {
+    if (isValid) {
+        input.classList.remove('error');
+        input.classList.add('success');
+    } else {
+        input.classList.remove('success');
+        input.classList.add('error');
+    }
+}
+
+function clearValidation(input) {
+    input.classList.remove('success', 'error');
+}
+
+// ==================== UTILITY FUNCTIONS ====================
 
 // Format time in MM:SS format
 function formatTime(seconds) {
@@ -62,10 +137,60 @@ function scrollToElement(elementId) {
 async function copyToClipboard(text) {
     try {
         await navigator.clipboard.writeText(text);
+        showToast('Copied to clipboard!', 'success');
         return true;
     } catch (err) {
         console.error('Failed to copy:', err);
+        showToast('Failed to copy', 'error');
         return false;
+    }
+}
+
+// ==================== ANIMATIONS ====================
+
+// Add animation class to element
+function animate(element, animationClass) {
+    element.classList.add(animationClass);
+    element.addEventListener('animationend', () => {
+        element.classList.remove(animationClass);
+    }, { once: true });
+}
+
+// Intersection Observer for scroll animations
+function initScrollAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    document.querySelectorAll('.glass-card, .stat-card').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    initScrollAnimations();
+
+    // Add ripple effect to buttons
+    document.querySelectorAll('.btn').forEach(button => {
+        if (!button.classList.contains('ripple')) {
+            button.classList.add('ripple');
+        }
+    });
+});
+
+// ==================== PROGRESS BAR ====================
+
+function updateProgressBar(percentage) {
+    const progressBar = document.querySelector('.progress-bar-fill');
+    if (progressBar) {
+        progressBar.style.width = `${percentage}%`;
     }
 }
 
@@ -73,11 +198,19 @@ async function copyToClipboard(text) {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         showAlert,
+        showToast,
+        setButtonLoading,
+        showLoader,
+        hideLoader,
+        validateInput,
+        clearValidation,
         formatTime,
         isValidEmail,
         isValidPhone,
         debounce,
         scrollToElement,
-        copyToClipboard
+        copyToClipboard,
+        animate,
+        updateProgressBar
     };
 }
