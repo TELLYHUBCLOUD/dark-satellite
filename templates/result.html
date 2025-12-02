@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Result - O Level Exam Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar no-print">
+        <div class="container navbar-content">
+            <div class="navbar-brand">🎓 O Level Exam Portal</div>
+            <ul class="navbar-nav">
+                <li><a href="/" class="nav-link">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="result-container">
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-logo">🎓</div>
+                    <h1 class="result-title">O Level Examination Result</h1>
+                    <p style="color: var(--text-muted);">Computer Science - 2025</p>
+                </div>
+
+                <div class="result-info">
+                    <div class="info-item">
+                        <div class="info-label">Roll Number</div>
+                        <div class="info-value">{{ result.roll_number }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Student Name</div>
+                        <div class="info-value">{{ result.name }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">{{ result.email }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Exam Date</div>
+                        <div class="info-value">{{ result.exam_date }}</div>
+                    </div>
+                </div>
+
+                <div class="result-score">
+                    <div class="score-circle">
+                        <div class="score-percentage">{{ result.percentage }}%</div>
+                        <div class="score-label">Score</div>
+                    </div>
+                    <div class="grade-badge">Grade: {{ result.grade }}</div>
+                </div>
+
+                <div class="result-info" style="margin-bottom: 2rem;">
+                    <div class="info-item">
+                        <div class="info-label">Correct Answers</div>
+                        <div class="info-value" style="color: var(--success);">{{ result.score }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Total Questions</div>
+                        <div class="info-value">{{ result.total }}</div>
+                    </div>
+                </div>
+
+                <div class="result-status {% if result.status == 'PASS' %}pass{% else %}fail{% endif %}">
+                    {% if result.status == 'PASS' %}
+                    ✓ PASSED - Congratulations!
+                    {% else %}
+                    ✗ FAILED - Better luck next time
+                    {% endif %}
+                </div>
+
+                <div class="no-print" style="display: flex; gap: 1rem; justify-content: center;">
+                    <button onclick="window.print()" class="btn btn-primary">Print Result</button>
+                    <a href="/" class="btn btn-outline">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .result-card {
+                box-shadow: none;
+                border: 2px solid #000;
+                page-break-inside: avoid;
+            }
+
+            .result-score {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</body>
+
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - O Level Exam Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">🎓 O Level Exam Portal</div>
+            <ul class="navbar-nav">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/login" class="nav-link">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container" style="max-width: 500px;">
+            <div class="glass-card">
+                <h2 class="text-center" style="margin-bottom: 2rem;">Student Registration</h2>
+
+                <div id="alert-container"></div>
+
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="name" class="form-input" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" id="email" class="form-input" placeholder="your.email@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" id="phone" class="form-input" placeholder="10-digit phone number" required
+                            pattern="[0-9]{10}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="password" class="form-input" placeholder="Minimum 6 characters"
+                            required minlength="6">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Re-enter password"
+                            required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+                </form>
+
+                <p class="text-center mt-2" style="color: var(--text-muted);">
+                    Already have an account? <a href="/login" style="color: var(--primary);">Login here</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match', 'error');
+                return;
+            }
+
+            // Validate phone
+            if (!/^\d{10}$/.test(phone)) {
+                showAlert('Phone must be exactly 10 digits', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, phone, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(`Registration successful! Your Roll Number is: ${data.roll_number}. Please save it for login.`, 'success');
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 3000);
+                } else {
+                    showAlert(data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('Registration failed. Please try again.', 'error');
+            }
+        });
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+        }
+    </script>
+</body>
+
+</html>

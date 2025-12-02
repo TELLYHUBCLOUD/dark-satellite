@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login - O Level Exam Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">🎓 O Level Exam Portal</div>
+            <ul class="navbar-nav">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/register" class="nav-link">Register</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container" style="max-width: 500px;">
+            <div class="glass-card">
+                <h2 class="text-center" style="margin-bottom: 2rem;">Student Login</h2>
+
+                <div id="alert-container"></div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Roll Number</label>
+                        <input type="text" id="rollNumber" class="form-input" placeholder="Enter your roll number"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="password" class="form-input" placeholder="Enter your password"
+                            required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                </form>
+
+                <p class="text-center mt-2" style="color: var(--text-muted);">
+                    Don't have an account? <a href="/register" style="color: var(--primary);">Register here</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const roll_number = document.getElementById('rollNumber').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ roll_number, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 1000);
+                } else {
+                    showAlert(data.message, 'error');
+                    if (data.redirect) {
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, 2000);
+                    }
+                }
+            } catch (error) {
+                showAlert('Login failed. Please try again.', 'error');
+            }
+        });
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+        }
+    </script>
+</body>
+
+</html>

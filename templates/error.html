@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - O Level Exam Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">🎓 O Level Exam Portal</div>
+            <ul class="navbar-nav">
+                <li><a href="/" class="nav-link">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container" style="max-width: 600px; text-align: center;">
+            <div class="glass-card">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">⚠️</div>
+                <h2 style="color: var(--error); margin-bottom: 1rem;">Oops! Something went wrong</h2>
+                <p style="color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 2rem;">
+                    {{ message }}
+                </p>
+                <a href="/" class="btn btn-primary">Go to Home</a>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - O Level Exam Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">🎓 O Level Exam Portal</div>
+            <ul class="navbar-nav">
+                <li><a href="/" class="nav-link">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container" style="max-width: 500px;">
+            <div class="glass-card">
+                <h2 class="text-center" style="margin-bottom: 2rem;">🔐 Admin Login</h2>
+
+                <div id="alert-container"></div>
+
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" id="username" class="form-input" placeholder="Enter admin username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="password" class="form-input" placeholder="Enter admin password"
+                            required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login as Admin</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 1000);
+                } else {
+                    showAlert(data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('Login failed. Please try again.', 'error');
+            }
+        });
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+        }
+    </script>
+</body>
+
+</html>

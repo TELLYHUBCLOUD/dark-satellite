@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam - O Level Exam Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">🎓 O Level Exam Portal</div>
+            <ul class="navbar-nav">
+                <li><span class="nav-link">Welcome, {{ student_name }}</span></li>
+                <li><a href="/logout" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            <div class="exam-header">
+                <div>
+                    <h2 style="margin: 0;">O Level Computer Science Exam</h2>
+                    <p style="color: var(--text-muted); margin: 0;">Answer all 100 questions</p>
+                </div>
+                <div>
+                    <div style="text-align: center;">
+                        <div style="color: var(--text-muted); font-size: 0.875rem;">Time Remaining</div>
+                        <div id="timer" class="timer">{{ duration }}:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loading" class="text-center" style="padding: 3rem;">
+                <h3>Loading exam...</h3>
+            </div>
+
+            <div id="examContainer" style="display: none;">
+                <div class="exam-container">
+                    <div id="questionsContainer"></div>
+
+                    <div class="question-nav">
+                        <h4 class="question-nav-title">Question Navigator</h4>
+                        <div id="questionGrid" class="question-grid"></div>
+                        <button id="submitBtn" class="btn btn-success" style="width: 100%;">Submit Exam</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let questions = [];
+        let currentQuestion = 0;
+        let answers = {};
+        let timeRemaining = {{ duration }} * 60; // in seconds
+        let timerInterval;
+
+        // Start exam on page load
+        window.addEventListener('load', startExam);
+
+        async function startExam() {
+            try {
+                const response = await fetch('/api/start_exam', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    questions = data.questions;
+                    timeRemaining = data.remaining_time;
+                    answers = data.saved_answers || {};
+
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('examContainer').style.display = 'block';
+
+                    renderQuestionNavigator();
+                    showQuestion(0);
+                    startTimer();
+                } else {
+                    alert(data.message);
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                }
+            } catch (error) {
+                alert('Failed to load exam. Please try again.');
+            }
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            const timerEl = document.getElementById('timer');
+            timerEl.textContent = display;
+
+            // Change color based on time
+            timerEl.classList.remove('warning', 'danger');
+            if (timeRemaining <= 300) { // 5 minutes
+                timerEl.classList.add('danger');
+            } else if (timeRemaining <= 600) { // 10 minutes
+                timerEl.classList.add('warning');
+            }
+        }
+
+        function renderQuestionNavigator() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const btn = document.createElement('button');
+                btn.textContent = index + 1;
+                btn.className = 'question-nav-btn';
+                if (answers[q.id]) btn.classList.add('answered');
+                if (index === currentQuestion) btn.classList.add('current');
+                btn.onclick = () => showQuestion(index);
+                grid.appendChild(btn);
+            });
+        }
+
+        function showQuestion(index) {
+            currentQuestion = index;
+            const q = questions[index];
+
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = `
+                <div class="question-card">
+                    <div class="question-number">Question ${index + 1} of ${questions.length}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, i) => {
+                const letter = String.fromCharCode(65 + i); // A, B, C, D
+                const checked = answers[q.id] === letter ? 'checked' : '';
+                return `
+                                <label class="option ${checked ? 'selected' : ''}" onclick="selectOption(this)">
+                                    <input type="radio" name="answer" value="${letter}" ${checked}>
+                                    <span><strong>${letter}.</strong> ${opt}</span>
+                                </label>
+                            `;
+            }).join('')}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+                        <button class="btn btn-outline" onclick="previousQuestion()" ${index === 0 ? 'disabled' : ''}>
+                            Previous
+                        </button>
+                        <button class="btn btn-primary" onclick="nextQuestion()" ${index === questions.length - 1 ? 'disabled' : ''}>
+                            Next
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners to radio buttons
+            document.querySelectorAll('input[name="answer"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    saveAnswer(q.id, e.target.value);
+                });
+            });
+
+            renderQuestionNavigator();
+        }
+
+        function selectOption(label) {
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            label.classList.add('selected');
+        }
+
+        async function saveAnswer(questionId, answer) {
+            answers[questionId] = answer;
+            renderQuestionNavigator();
+
+            // Save to server
+            try {
+                await fetch('/api/save_answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question_id: questionId, answer })
+                });
+            } catch (error) {
+                console.error('Failed to save answer');
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                showQuestion(currentQuestion - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                showQuestion(currentQuestion + 1);
+            }
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            const answered = Object.keys(answers).length;
+            const unanswered = questions.length - answered;
+
+            let message = `You have answered ${answered} out of ${questions.length} questions.`;
+            if (unanswered > 0) {
+                message += `\n${unanswered} questions are unanswered.`;
+            }
+            message += '\n\nAre you sure you want to submit?';
+
+            if (confirm(message)) {
+                submitExam();
+            }
+        });
+
+        async function submitExam() {
+            clearInterval(timerInterval);
+
+            try {
+                const response = await fetch('/api/submit_exam', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(data.message);
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Failed to submit exam. Please try again.');
+            }
+        }
+
+        // Prevent page refresh
+        window.addEventListener('beforeunload', (e) => {
+            e.preventDefault();
+            e.returnValue = '';
+        });
+    </script>
+</body>
+
+</html>
