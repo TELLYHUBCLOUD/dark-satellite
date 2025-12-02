@@ -11,8 +11,14 @@ class Config:
     # For local development
     MONGO_URI_LOCAL = os.environ.get('MONGO_URI_LOCAL') or 'mongodb://localhost:27017/olevel_exam'
     
-    # For production (MongoDB Atlas)
-    MONGO_URI = os.environ.get('MONGO_URI') or MONGO_URI_LOCAL
+    # For production (MongoDB Atlas) - MUST BE SET IN VERCEL ENVIRONMENT VARIABLES
+    MONGO_URI = os.environ.get('MONGO_URI')
+    
+    # Use Atlas if available, otherwise local
+    if not MONGO_URI:
+        MONGO_URI = MONGO_URI_LOCAL
+        print("⚠️  WARNING: Using local MongoDB. For Vercel, set MONGO_URI environment variable!")
+        print("📖 See MONGODB_ATLAS_SETUP.md for instructions")
     
     # Database name
     DB_NAME = 'olevel_exam'
