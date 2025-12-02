@@ -4,7 +4,6 @@ from bson.objectid import ObjectId
 import os
 from config import Config
 from utils import hash_password, verify_password, generate_roll_number
-
 class Database:
     """Database connection manager"""
     _instance = None
@@ -36,10 +35,8 @@ class Database:
             self._client.close()
             self._client = None
             self._db = None
-
 # Initialize database
 db_manager = Database()
-
 class Student:
     """Student model"""
     
@@ -114,7 +111,6 @@ class Student:
             {'roll_number': roll_number},
             {'$set': {'exam_taken': True}}
         )
-
 class Question:
     """Question model"""
     
@@ -151,7 +147,6 @@ class Question:
         """Count total questions"""
         db = db_manager.get_db()
         return db.questions.count_documents({})
-
 class Exam:
     """Exam model"""
     
@@ -230,7 +225,6 @@ class Exam:
         """Count completed exams"""
         db = db_manager.get_db()
         return db.exams.count_documents({'status': 'completed'})
-
 class Admin:
     """Admin model"""
     
