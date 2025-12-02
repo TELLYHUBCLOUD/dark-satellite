@@ -1,6 +1,8 @@
 import os
 from datetime import timedelta
-
+from dotenv import load_dotenv
+# Load environment variables from .env file
+load_dotenv()
 class Config:
     """Base configuration class for the exam portal"""
     
@@ -54,24 +56,20 @@ class Config:
         'E': 40,
         'F': 0
     }
-
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
     TESTING = False
-
 class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = True
-
 class TestingConfig(Config):
     """Testing configuration"""
     DEBUG = True
     TESTING = True
     MONGO_URI = 'mongodb://localhost:27017/olevel_exam_test'
-
 # Configuration dictionary
 config = {
     'development': DevelopmentConfig,
