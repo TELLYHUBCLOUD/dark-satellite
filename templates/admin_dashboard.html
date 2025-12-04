@@ -105,6 +105,53 @@
                     <p class="text-center" style="color: var(--text-muted);">Loading students...</p>
                 </div>
             </div>
+            
+            <!-- Question Management -->
+            <div class="glass-card" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1.5rem;">Question Management</h3>
+                
+                <!-- Add Question Form -->
+                <form id="addQuestionForm" style="margin-bottom: 2rem;">
+                    <div class="form-group">
+                        <label for="question">Question</label>
+                        <input type="text" id="question" name="question" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="optionA">Option A</label>
+                        <input type="text" id="optionA" name="optionA" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="optionB">Option B</label>
+                        <input type="text" id="optionB" name="optionB" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="optionC">Option C</label>
+                        <input type="text" id="optionC" name="optionC" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="optionD">Option D</label>
+                        <input type="text" id="optionD" name="optionD" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="correct">Correct Answer</label>
+                        <select id="correct" name="correct" class="form-control" required>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Question</button>
+                </form>
+                
+                <div id="questionsContainer">
+                    <p class="text-center" style="color: var(--text-muted);">Loading questions...</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -161,8 +208,112 @@
             }
         }
 
-        // Load students on page load
-        window.addEventListener('load', loadStudents);
+        // Load all questions
+        async function loadQuestions() {
+            try {
+                const response = await fetch('/api/admin/questions');
+                const data = await response.json();
+
+                if (data.success) {
+                    const container = document.getElementById('questionsContainer');
+
+                    if (data.questions.length === 0) {
+                        container.innerHTML = '<p class="text-center" style="color: var(--text-muted); padding: 2rem;">No questions found.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Question</th>
+                                        <th>Subject</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.questions.map(q => `
+                                        <tr>
+                                            <td>${q.question}</td>
+                                            <td>${q.subject}</td>
+                                            <td>
+                                                <button class="btn btn-danger" onclick="deleteQuestion('${q.id}')">Delete</button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Failed to load questions');
+            }
+        }
+        
+        // Add new question
+        document.getElementById('addQuestionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const question = document.getElementById('question').value;
+            const options = [
+                document.getElementById('optionA').value,
+                document.getElementById('optionB').value,
+                document.getElementById('optionC').value,
+                document.getElementById('optionD').value
+            ];
+            const correct = document.getElementById('correct').value;
+            const subject = document.getElementById('subject').value;
+            
+            try {
+                const response = await fetch('/api/admin/questions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question, options, correct, subject })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Question added successfully!');
+                    loadQuestions();
+                    document.getElementById('addQuestionForm').reset();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Failed to add question. Please try again.');
+            }
+        });
+        
+        // Delete a question
+        async function deleteQuestion(questionId) {
+            if (confirm('Are you sure you want to delete this question?')) {
+                try {
+                    const response = await fetch('/api/admin/questions/' + questionId, {
+                        method: 'DELETE'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        alert('Question deleted successfully!');
+                        loadQuestions();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Failed to delete question. Please try again.');
+                }
+            }
+        }
+
+        // Load data on page load
+        window.addEventListener('load', () => {
+            loadStudents();
+            loadQuestions();
+        });
     </script>
 </body>
 

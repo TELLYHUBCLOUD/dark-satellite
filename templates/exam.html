@@ -24,7 +24,7 @@
         <div class="container">
             <div class="exam-header">
                 <div>
-                    <h2 style="margin: 0;">O Level Computer Science Exam</h2>
+                    <h2 style="margin: 0;">O Level {{ subject }} Exam</h2>
                     <p style="color: var(--text-muted); margin: 0;">Answer all 100 questions</p>
                 </div>
                 <div>
@@ -65,7 +65,7 @@
 
         async function startExam() {
             try {
-                const response = await fetch('/api/start_exam', {
+                const response = await fetch('/api/start_exam/{{ subject }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

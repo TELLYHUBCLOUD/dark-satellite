@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O Level Exam Portal</title>
+    <title>O Level Exam Portal - Select Subject</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,37 +24,29 @@
 
     <section class="hero">
         <div class="container">
-            <h1 class="hero-title">Welcome to O Level Exam Portal</h1>
-            <p class="hero-subtitle">Your gateway to excellence in Computer Science examination</p>
+            <h1 class="hero-title">Select Your Subject</h1>
+            <p class="hero-subtitle">Choose a subject to start the exam.</p>
             <div class="hero-buttons">
-                <a href="/register" class="btn btn-primary btn-lg">Register Now</a>
-                <a href="/login" class="btn btn-outline btn-lg">Student Login</a>
-            </div>
-            
-            <div class="glass-card mt-3" style="max-width: 600px; margin: 3rem auto 0;">
-                <h3 style="text-align: center; margin-bottom: 1.5rem;">Exam Information</h3>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-                    <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
-                        <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;">100</div>
-                        <div style="color: var(--text-muted);">Questions</div>
-                    </div>
-                    <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
-                        <div style="font-size: 2rem; color: var(--accent); margin-bottom: 0.5rem;">100</div>
-                        <div style="color: var(--text-muted);">Minutes</div>
-                    </div>
-                    <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
-                        <div style="font-size: 2rem; color: var(--secondary); margin-bottom: 0.5rem;">MCQ</div>
-                        <div style="color: var(--text-muted);">Format</div>
-                    </div>
-                    <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
-                        <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;">40%</div>
-                        <div style="color: var(--text-muted);">Passing</div>
-                    </div>
+                <div class="form-group">
+                    <select id="subject-select" class="form-control">
+                        {% for subject in subjects %}
+                            <option value="{{ subject }}">{{ subject }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
+                <button id="start-exam-btn" class="btn btn-primary btn-lg">Start Exam</button>
             </div>
         </div>
     </section>
 
+    <script>
+        document.getElementById('start-exam-btn').addEventListener('click', function() {
+            var subject = document.getElementById('subject-select').value;
+            if (subject) {
+                window.location.href = '/exam/' + subject;
+            }
+        });
+    </script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

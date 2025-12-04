@@ -67,7 +67,8 @@ def before_request():
 @app.route('/')
 def index():
     """Landing page"""
-    return render_template('index.html')
+    subjects = Question.get_subjects()
+    return render_template('index.html', subjects=subjects)
 
 # ==================== STUDENT ROUTES ====================
 
@@ -120,7 +121,7 @@ def register():
 def login_page():
     """Student login page"""
     if 'student_roll' in session:
-        return redirect(url_for('exam_page'))
+        return redirect(url_for('subjects_page'))
     return render_template('login.html')
 
 @app.route('/api/login', methods=['POST'])
@@ -157,7 +158,7 @@ def login():
         return jsonify({
             'success': True,
             'message': 'Login successful!',
-            'redirect': '/exam'
+            'redirect': '/subjects'
         }), 200
         
     except Exception as e:
@@ -172,9 +173,16 @@ def logout():
 
 # ==================== EXAM ROUTES ====================
 
-@app.route('/exam')
+@app.route('/subjects')
 @login_required
-def exam_page():
+def subjects_page():
+    """Subjects selection page"""
+    subjects = Question.get_subjects()
+    return render_template('subjects.html', subjects=subjects)
+
+@app.route('/exam/<subject>')
+@login_required
+def exam_page(subject):
     """Exam interface page"""
     student_roll = session.get('student_roll')
     
@@ -186,12 +194,13 @@ def exam_page():
     
     return render_template('exam.html', 
                          student_name=session.get('student_name'),
-                         duration=app.config['EXAM_DURATION_MINUTES'])
+                         duration=app.config['EXAM_DURATION_MINUTES'],
+                         subject=subject)
 
-@app.route('/api/start_exam', methods=['POST'])
+@app.route('/api/start_exam/<subject>', methods=['POST'])
 @login_required
-def start_exam():
-    """Start exam and get questions"""
+def start_exam(subject):
+    """Start exam and get questions for a specific subject"""
     try:
         student_roll = session.get('student_roll')
         
@@ -231,13 +240,13 @@ def start_exam():
                 'saved_answers': existing_exam.get('answers', {})
             }), 200
         
-        # Get random questions
-        questions = Question.get_random(app.config['TOTAL_QUESTIONS'])
+        # Get random questions by subject
+        questions = Question.get_random_by_subject(subject, app.config['TOTAL_QUESTIONS'])
         
         if len(questions) < app.config['TOTAL_QUESTIONS']:
             return jsonify({
                 'success': False,
-                'message': f'Not enough questions in database. Need {app.config["TOTAL_QUESTIONS"]}, found {len(questions)}'
+                'message': f'Not enough questions in database for subject {subject}. Need {app.config["TOTAL_QUESTIONS"]}, found {len(questions)}'
             }), 500
         
         # Create exam
@@ -471,6 +480,96 @@ def get_students():
         
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/admin/questions', methods=['GET'])
+@admin_required
+def get_questions():
+    """Get all questions (API)"""
+    try:
+        page = int(request.args.get('page', 1))
+        per_page = app.config['QUESTIONS_PER_PAGE']
+        
+        questions = Question.get_all_questions(skip=(page-1)*per_page, limit=per_page)
+        total = Question.count()
+        
+        # Format questions
+        question_list = []
+        for q in questions:
+            question_list.append({
+                'id': str(q['_id']),
+                'question': q['question'],
+                'subject': q['subject'],
+                'options': q['options'],
+                'correct': q['correct']
+            })
+        
+        return jsonify({
+            'success': True,
+            'questions': question_list,
+            'total': total,
+            'page': page,
+            'pages': (total + per_page - 1) // per_page
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/admin/questions', methods=['POST'])
+@admin_required
+def add_question():
+    """Add a new question (API)"""
+    try:
+        data = request.get_json()
+        
+        question_text = sanitize_input(data.get('question', ''))
+        options = data.get('options', [])
+        correct_answer = sanitize_input(data.get('correct', ''))
+        subject = sanitize_input(data.get('subject', ''))
+        
+        if not all([question_text, options, correct_answer, subject]):
+            return jsonify({'success': False, 'message': 'All fields are required'}), 400
+        
+        if len(options) != 4:
+            return jsonify({'success': False, 'message': 'There must be 4 options'}), 400
+
+        Question.create(question_text, options, correct_answer, subject)
+        
+        return jsonify({'success': True, 'message': 'Question added successfully'}), 201
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/admin/questions/<question_id>', methods=['DELETE'])
+@admin_required
+def delete_question(question_id):
+    """Delete a question (API)"""
+    try:
+        if not ObjectId.is_valid(question_id):
+            return jsonify({'success': False, 'message': 'Invalid Question ID'}), 400
+        
+        if Question.delete_question(question_id):
+            return jsonify({'success': True, 'message': 'Question deleted successfully'}), 200
+        else:
+            return jsonify({'success': False, 'message': 'Question not found'}), 404
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+# ==================== ERROR HANDLERS ====================
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('error.html', message='Page not found'), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('error.html', message='Internal server error'), 500
+
+# ==================== RUN APP ====================
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
 
 # ==================== ERROR HANDLERS ====================
 

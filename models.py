@@ -126,7 +126,7 @@ class Question:
     """Question model"""
     
     @staticmethod
-    def create(question_text, options, correct_answer, subject='Computer Science'):
+    def create(question_text, options, correct_answer, subject):
         """Create a new question"""
         db = db_manager.get_db()
         
@@ -152,6 +152,34 @@ class Question:
         """Get random questions for exam"""
         db = db_manager.get_db()
         return list(db.questions.aggregate([{'$sample': {'size': count}}]))
+    
+    @staticmethod
+    def get_subjects():
+        """Get a list of distinct subjects"""
+        db = db_manager.get_db()
+        return db.questions.distinct('subject')
+
+    @staticmethod
+    def get_random_by_subject(subject, count=100):
+        """Get random questions for a specific subject"""
+        db = db_manager.get_db()
+        return list(db.questions.aggregate([
+            {'$match': {'subject': subject}},
+            {'$sample': {'size': count}}
+        ]))
+    
+    @staticmethod
+    def get_all_questions(skip=0, limit=20):
+        """Get all questions with pagination"""
+        db = db_manager.get_db()
+        return list(db.questions.find().skip(skip).limit(limit))
+
+    @staticmethod
+    def delete_question(question_id):
+        """Delete a question by its ID"""
+        db = db_manager.get_db()
+        result = db.questions.delete_one({'_id': ObjectId(question_id)})
+        return result.deleted_count > 0
     
     @staticmethod
     def count():
