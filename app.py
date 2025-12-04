@@ -142,13 +142,13 @@ def login():
         if not student:
             return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
         
-        # Check if already taken exam
-        if student.get('exam_taken'):
-            return jsonify({
-                'success': False,
-                'message': 'You have already taken the exam',
-                'redirect': '/result/' + roll_number
-            }), 403
+        # Check if already taken exam - REMOVED for multi-subject support
+        # if student.get('exam_taken'):
+        #     return jsonify({
+        #         'success': False,
+        #         'message': 'You have already taken the exam',
+        #         'redirect': '/result/' + roll_number
+        #     }), 403
         
         # Set session
         session['student_roll'] = roll_number
@@ -204,14 +204,14 @@ def start_exam(subject):
     try:
         student_roll = session.get('student_roll')
         
-        # Check if exam already exists
-        existing_exam = Exam.get_by_student(student_roll)
+        # Check if exam already exists for this subject
+        existing_exam = Exam.get_by_student_and_subject(student_roll, subject)
         
         if existing_exam:
             if existing_exam['status'] == 'completed':
                 return jsonify({
                     'success': False,
-                    'message': 'Exam already completed',
+                    'message': 'Exam already completed for this subject',
                     'redirect': '/result/' + student_roll
                 }), 403
             
@@ -250,7 +250,7 @@ def start_exam(subject):
             }), 500
         
         # Create exam
-        exam, error = Exam.create(student_roll, questions)
+        exam, error = Exam.create(student_roll, subject, questions)
         
         if error:
             return jsonify({'success': False, 'message': error}), 400
@@ -300,8 +300,8 @@ def submit_exam():
     try:
         student_roll = session.get('student_roll')
         
-        # Get exam
-        exam = Exam.get_by_student(student_roll)
+        # Get active exam
+        exam = Exam.get_active_exam(student_roll)
         
         if not exam:
             return jsonify({'success': False, 'message': 'Exam not found'}), 404
@@ -344,26 +344,33 @@ def result_page(roll_number):
         if not student:
             return render_template('error.html', message='Student not found'), 404
         
-        # Get exam
-        exam = Exam.get_by_student(roll_number)
+        # Get exams
+        exams = Exam.get_by_student(roll_number)
         
-        if not exam or exam['status'] != 'completed':
-            return render_template('error.html', message='Result not available yet'), 404
+        if not exams:
+            return render_template('error.html', message='No exams found'), 404
         
         # Prepare result data
-        result_data = {
-            'roll_number': roll_number,
-            'name': student['name'],
-            'email': student['email'],
-            'score': exam['score'],
-            'total': exam['total'],
-            'percentage': exam['percentage'],
-            'grade': exam['grade'],
-            'exam_date': format_datetime(exam['submit_time']),
-            'status': 'PASS' if exam['percentage'] >= app.config['PASSING_MARKS'] else 'FAIL'
-        }
+        results = []
+        for exam in exams:
+            if exam['status'] == 'completed':
+                results.append({
+                    'roll_number': roll_number,
+                    'name': student['name'],
+                    'email': student['email'],
+                    'subject': exam.get('subject', 'Unknown'),
+                    'score': exam['score'],
+                    'total': exam['total'],
+                    'percentage': exam['percentage'],
+                    'grade': exam['grade'],
+                    'exam_date': format_datetime(exam['submit_time']),
+                    'status': 'PASS' if exam['percentage'] >= app.config['PASSING_MARKS'] else 'FAIL'
+                })
         
-        return render_template('result.html', result=result_data)
+        if not results:
+             return render_template('error.html', message='Result not available yet'), 404
+
+        return render_template('result.html', results=results, student=student)
         
     except Exception as e:
         return render_template('error.html', message=str(e)), 500
@@ -552,6 +559,26 @@ def delete_question(question_id):
         else:
             return jsonify({'success': False, 'message': 'Question not found'}), 404
         
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/admin/reset_exam', methods=['POST'])
+@admin_required
+def reset_exam():
+    """Reset exam for a student and subject"""
+    try:
+        data = request.get_json()
+        student_roll = data.get('student_roll')
+        subject = data.get('subject')
+        
+        if not all([student_roll, subject]):
+            return jsonify({'success': False, 'message': 'Student Roll and Subject are required'}), 400
+            
+        if Exam.delete_exam(student_roll, subject):
+            return jsonify({'success': True, 'message': 'Exam reset successfully'}), 200
+        else:
+            return jsonify({'success': False, 'message': 'Exam not found'}), 404
+            
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 

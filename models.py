@@ -191,17 +191,18 @@ class Exam:
     """Exam model"""
     
     @staticmethod
-    def create(student_roll, questions):
+    def create(student_roll, subject, questions):
         """Create a new exam session"""
         db = db_manager.get_db()
         
-        # Check if student already has an exam
-        existing = db.exams.find_one({'student_roll': student_roll})
+        # Check if student already has an exam for this subject
+        existing = db.exams.find_one({'student_roll': student_roll, 'subject': subject})
         if existing:
-            return existing, "Exam already taken"
+            return existing, "Exam already taken for this subject"
         
         exam = {
             'student_roll': student_roll,
+            'subject': subject,
             'questions': [str(q['_id']) for q in questions],  # Store question IDs
             'answers': {},  # Will store {question_id: selected_option}
             'start_time': datetime.now(),
@@ -219,16 +220,37 @@ class Exam:
     
     @staticmethod
     def get_by_student(student_roll):
-        """Get exam by student roll number"""
+        """Get all exams by student roll number"""
         db = db_manager.get_db()
-        return db.exams.find_one({'student_roll': student_roll})
+        return list(db.exams.find({'student_roll': student_roll}))
+
+    @staticmethod
+    def get_by_student_and_subject(student_roll, subject):
+        """Get exam by student and subject"""
+        db = db_manager.get_db()
+        return db.exams.find_one({'student_roll': student_roll, 'subject': subject})
+
+    @staticmethod
+    def get_active_exam(student_roll):
+        """Get the currently active exam for a student"""
+        db = db_manager.get_db()
+        return db.exams.find_one({'student_roll': student_roll, 'status': 'in_progress'})
     
     @staticmethod
     def save_answer(student_roll, question_id, answer):
         """Save a single answer"""
         db = db_manager.get_db()
+        # Find exam that contains this question and belongs to student
+        # This handles multiple exams correctly since question IDs are unique per exam instance 
+        # (or at least the combination of student + question implies the active exam context)
+        # Better: Find the 'in_progress' exam for this student that has this question.
+        
         db.exams.update_one(
-            {'student_roll': student_roll},
+            {
+                'student_roll': student_roll, 
+                'status': 'in_progress',
+                'questions': question_id
+            },
             {'$set': {f'answers.{question_id}': answer}}
         )
     
@@ -238,7 +260,7 @@ class Exam:
         db = db_manager.get_db()
         
         result = db.exams.update_one(
-            {'student_roll': student_roll},
+            {'student_roll': student_roll, 'status': 'in_progress'},
             {'$set': {
                 'submit_time': datetime.now(),
                 'score': score,
@@ -265,6 +287,13 @@ class Exam:
         """Count completed exams"""
         db = db_manager.get_db()
         return db.exams.count_documents({'status': 'completed'})
+
+    @staticmethod
+    def delete_exam(student_roll, subject):
+        """Delete an exam for a student and subject (Admin feature)"""
+        db = db_manager.get_db()
+        result = db.exams.delete_one({'student_roll': student_roll, 'subject': subject})
+        return result.deleted_count > 0
 
 class Admin:
     """Admin model"""

@@ -1368,31 +1368,212 @@ h6 {
             grid-template-columns: 1fr;
         }
 
-        .hero-buttons {
-            flex-direction: column;
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
         }
 
-        .navbar-nav {
-            flex-direction: column;
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .ripple:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Fade In Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Scale In Animation */
+        .scale-in {
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Slide In From Bottom */
+        .slide-in-bottom {
+            animation: slideInBottom 0.4s ease;
+        }
+
+        @keyframes slideInBottom {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Bounce Animation */
+        .bounce {
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* ==================== UTILITIES ==================== */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .mt-1 {
+            margin-top: var(--spacing-sm);
+        }
+
+        .mt-2 {
+            margin-top: var(--spacing-md);
+        }
+
+        .mt-3 {
+            margin-top: var(--spacing-lg);
+        }
+
+        .mb-1 {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .mb-2 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .mb-3 {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gap-1 {
             gap: var(--spacing-sm);
         }
-    }
 
-    /* ==================== CUSTOM SCROLLBAR ==================== */
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
+        .gap-2 {
+            gap: var(--spacing-md);
+        }
 
-    ::-webkit-scrollbar-track {
-        background: var(--bg-primary);
-    }
+        /* ==================== PRINT STYLES ==================== */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
 
-    ::-webkit-scrollbar-thumb {
-        background: var(--bg-tertiary);
-        border-radius: var(--radius-md);
-        border: 2px solid var(--bg-primary);
-    }
+            body::before {
+                display: none;
+            }
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--primary);
-    }
+            .navbar,
+            .btn,
+            .no-print {
+                display: none !important;
+            }
+
+            .result-card {
+                box-shadow: none;
+                border: 2px solid #000;
+            }
+
+            .glass-card {
+                background: white;
+                border: 1px solid #ddd;
+            }
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .exam-container {
+                grid-template-columns: 1fr;
+            }
+
+            .question-nav {
+                position: static;
+            }
+
+            .result-info {
+                grid-template-columns: 1fr;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: var(--bg-primary);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: var(--bg-tertiary);
+                border-radius: var(--radius-md);
+                border: 2px solid var(--bg-primary);
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--primary);
+            }
+        }
