@@ -472,12 +472,17 @@ def get_students():
         # Format students
         student_list = []
         for student in students:
+            # Get completed exams for this student
+            exams = Exam.get_by_student(student['roll_number'])
+            completed_subjects = [e['subject'] for e in exams if e.get('status') == 'completed']
+            
             student_list.append({
                 'roll_number': student['roll_number'],
                 'name': student['name'],
                 'email': student['email'],
                 'phone': student['phone'],
-                'exam_taken': student.get('exam_taken', False),
+                'exam_taken': len(completed_subjects) > 0,
+                'completed_subjects': completed_subjects,
                 'registered_at': format_datetime(student['created_at'])
             })
         

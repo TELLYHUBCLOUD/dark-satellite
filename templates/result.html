@@ -7,6 +7,29 @@
     <title>Exam Result - O Level Exam Portal</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .result-card {
+                box-shadow: none;
+                border: 2px solid #000;
+                page-break-inside: avoid;
+            }
+
+            .result-score {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -15,27 +38,60 @@
             <div class="navbar-brand">🎓 O Level Exam Portal</div>
             <ul class="navbar-nav">
                 <li><a href="/" class="nav-link">Home</a></li>
-                .no-print {
-                display: none !important;
-                }
+                <li><a href="/admin/logout" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
 
-                body {
-                background: white;
-                }
+    <section class="section">
+        <div class="container result-container">
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-logo">🎓</div>
+                    <h1 class="result-title">Exam Result</h1>
+                    <p style="color: var(--text-muted);">O Level Examination</p>
+                </div>
 
-                .result-card {
-                box-shadow: none;
-                border: 2px solid #000;
-                page-break-inside: avoid;
-                }
+                <div class="result-info">
+                    <div class="info-item">
+                        <div class="info-label">Student Name</div>
+                        <div class="info-value">{{ student.name }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Roll Number</div>
+                        <div class="info-value">{{ student.roll_number }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Subject</div>
+                        <div class="info-value">{{ exam.subject }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Date</div>
+                        <div class="info-value">{{ exam.submit_time.strftime('%d-%m-%Y %I:%M %p') }}</div>
+                    </div>
+                </div>
 
-                .result-score {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                }
-                }
-                </style>
+                <div class="result-score">
+                    <div class="score-circle">
+                        <div class="score-percentage">{{ "%.1f"|format(exam.percentage) }}%</div>
+                        <div class="score-label">Score</div>
+                    </div>
+                    <div class="grade-badge" style="color: var(--primary);">
+                        Grade: {{ exam.grade }}
+                    </div>
+                </div>
+
+                <div class="result-status {{ 'pass' if exam.percentage >= 50 else 'fail' }}">
+                    Result: {{ 'PASSED' if exam.percentage >= 50 else 'FAILED' }}
+                </div>
+
+                <div class="text-center no-print">
+                    <button onclick="window.print()" class="btn btn-secondary btn-lg">Print Result</button>
+                    <a href="/" class="btn btn-outline btn-lg" style="margin-left: 1rem;">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 
 </html>

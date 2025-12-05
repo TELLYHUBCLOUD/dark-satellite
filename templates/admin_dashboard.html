@@ -124,8 +124,10 @@
                                             <td>${student.email}</td>
                                             <td>${student.phone}</td>
                                             <td>
-                                                ${student.exam_taken
-                            ? '<span style="color: var(--success);">✓ Completed</span>'
+                                                ${student.completed_subjects && student.completed_subjects.length > 0
+                            ? student.completed_subjects.map(subject =>
+                                `<span style="display: inline-block; background: rgba(72, 187, 120, 0.2); color: #48bb78; padding: 2px 8px; border-radius: 12px; font-size: 0.85em; margin-right: 4px; margin-bottom: 4px;">${subject}</span>`
+                            ).join('')
                             : '<span style="color: var(--warning);">⏳ Pending</span>'}
                                             </td>
                                             <td>${student.registered_at}</td>
