@@ -21,6 +21,7 @@
                 box-shadow: none;
                 border: 2px solid #000;
                 page-break-inside: avoid;
+                margin-bottom: 2rem;
             }
 
             .result-score {
@@ -45,6 +46,7 @@
 
     <section class="section">
         <div class="container result-container">
+            {% for exam in results %}
             <div class="result-card">
                 <div class="result-header">
                     <div class="result-logo">🎓</div>
@@ -67,7 +69,7 @@
                     </div>
                     <div class="info-item">
                         <div class="info-label">Date</div>
-                        <div class="info-value">{{ exam.submit_time.strftime('%d-%m-%Y %I:%M %p') }}</div>
+                        <div class="info-value">{{ exam.exam_date }}</div>
                     </div>
                 </div>
 
@@ -81,14 +83,15 @@
                     </div>
                 </div>
 
-                <div class="result-status {{ 'pass' if exam.percentage >= 50 else 'fail' }}">
-                    Result: {{ 'PASSED' if exam.percentage >= 50 else 'FAILED' }}
+                <div class="result-status {{ 'pass' if exam.status == 'PASS' else 'fail' }}">
+                    Result: {{ exam.status }}
                 </div>
+            </div>
+            {% endfor %}
 
-                <div class="text-center no-print">
-                    <button onclick="window.print()" class="btn btn-secondary btn-lg">Print Result</button>
-                    <a href="/" class="btn btn-outline btn-lg" style="margin-left: 1rem;">Back to Home</a>
-                </div>
+            <div class="text-center no-print" style="margin-top: 2rem;">
+                <button onclick="window.print()" class="btn btn-secondary btn-lg">Print Results</button>
+                <a href="/" class="btn btn-outline btn-lg" style="margin-left: 1rem;">Back to Home</a>
             </div>
         </div>
     </section>

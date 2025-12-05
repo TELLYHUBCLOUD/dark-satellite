@@ -114,6 +114,7 @@
                                         <th>Phone</th>
                                         <th>Exam Status</th>
                                         <th>Registered At</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -131,6 +132,11 @@
                             : '<span style="color: var(--warning);">⏳ Pending</span>'}
                                             </td>
                                             <td>${student.registered_at}</td>
+                                            <td>
+                                                ${student.completed_subjects && student.completed_subjects.length > 0
+                            ? `<a href="/result/${student.roll_number}" target="_blank" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">View Result</a>`
+                            : '<span style="color: var(--text-muted); font-size: 0.85rem;">-</span>'}
+                                            </td>
                                         </tr>
                                     `).join('')}
                                 </tbody>
