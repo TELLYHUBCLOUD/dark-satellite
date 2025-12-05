@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - O Level Exam Portal</title>
+    <title>O Level Exam Portal - Admin</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -12,9 +12,9 @@
 <body>
     <nav class="navbar">
         <div class="container navbar-content">
-            <div class="navbar-brand">🎓 O Level Exam Portal - Admin</div>
+            <div class="navbar-brand">🎓 Admin Portal</div>
             <ul class="navbar-nav">
-                <li><span class="nav-link">Welcome, {{ admin_username }}</span></li>
+                <li><a href="/" class="nav-link">Home</a></li>
                 <li><a href="/admin/logout" class="nav-link">Logout</a></li>
             </ul>
         </div>
@@ -22,157 +22,62 @@
 
     <section class="section">
         <div class="container">
-            <h2 style="margin-bottom: 2rem;">Admin Dashboard</h2>
+            <h2 class="text-center" style="margin-bottom: 2rem;">Admin Dashboard</h2>
 
-            <!-- Statistics Cards -->
+            <!-- Stats Overview -->
             <div class="dashboard-grid">
                 <div class="stat-card">
                     <div class="stat-label">Total Students</div>
                     <div class="stat-value">{{ stats.total_students }}</div>
                 </div>
-                <div class="stat-card" style="border-left-color: var(--accent);">
+                <div class="stat-card">
                     <div class="stat-label">Exams Completed</div>
-                    <div class="stat-value"
-                        style="background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                        {{ stats.total_exams }}</div>
+                    <div class="stat-value">{{ stats.exams_completed }}</div>
                 </div>
-                <div class="stat-card" style="border-left-color: var(--secondary);">
-                    <div class="stat-label">Question Bank</div>
-                    <div class="stat-value"
-                        style="background: var(--gradient-secondary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                        {{ stats.total_questions }}</div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Questions</div>
+                    <div class="stat-value">{{ stats.total_questions }}</div>
                 </div>
             </div>
 
-            <!-- Recent Results -->
-            <div class="glass-card" style="margin-top: 2rem;">
-                <h3 style="margin-bottom: 1.5rem;">Recent Exam Results</h3>
-
-                {% if stats.recent_results %}
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Roll Number</th>
-                                <th>Student Name</th>
-                                <th>Score</th>
-                                <th>Percentage</th>
-                                <th>Grade</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for result in stats.recent_results %}
-                            <tr>
-                                <td>{{ result.student_roll }}</td>
-                                <td>{{ result.student_name }}</td>
-                                <td>{{ result.score }}/{{ result.total }}</td>
-                                <td>{{ result.percentage }}%</td>
-                                <td>
-                                    <span
-                                        style="padding: 0.25rem 0.75rem; background: var(--gradient-primary); color: white; border-radius: var(--radius-sm); font-weight: 600;">
-                                        {{ result.grade }}
-                                    </span>
-                                </td>
-                                <td>
-                                    {% if result.percentage >= 40 %}
-                                    <span style="color: var(--success);">✓ PASS</span>
-                                    {% else %}
-                                    <span style="color: var(--error);">✗ FAIL</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ result.exam_date }}</td>
-                                <td>
-                                    <a href="/result/{{ result.student_roll }}" class="btn btn-outline"
-                                        style="padding: 0.5rem 1rem; font-size: 0.875rem;">View</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <p style="text-align: center; color: var(--text-muted); padding: 2rem;">No exam results yet</p>
-                {% endif %}
-            </div>
-
-            <!-- All Students -->
-            <div class="glass-card" style="margin-top: 2rem;">
-                <h3 style="margin-bottom: 1.5rem;">All Registered Students</h3>
+            <!-- Student Management -->
+            <div class="glass-card">
+                <h3 style="margin-bottom: 1.5rem;">Registered Students</h3>
                 <div id="studentsContainer">
                     <p class="text-center" style="color: var(--text-muted);">Loading students...</p>
                 </div>
             </div>
 
-            <!-- Reset Exam Management -->
+            <!-- Quick Actions -->
             <div class="glass-card" style="margin-top: 2rem;">
-                <h3 style="margin-bottom: 1.5rem;">Reset Student Exam</h3>
-                <p style="color: var(--text-muted); margin-bottom: 1rem;">Use this to allow a student to retake an exam
-                    for a specific subject.</p>
-
-                <form id="resetExamForm">
-                    <div class="form-group">
-                        <label for="resetRoll">Student Roll Number</label>
-                        <input type="text" id="resetRoll" name="student_roll" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="resetSubject">Subject</label>
-                        <select id="resetSubject" name="subject" class="form-control" required>
-                            <!-- Options will be populated or free text -->
-                            <option value="Python">Python</option>
-                            <option value="Web Design">Web Design</option>
-                            <option value="IoT">IoT</option>
-                            <option value="Computer Fundamentals">Computer Fundamentals</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-danger">Reset Exam</button>
-                </form>
+                <h3 style="margin-bottom: 1.5rem;">Quick Actions</h3>
+                <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <a href="/admin/reset_exam" class="btn btn-secondary" style="text-align: center; padding: 2rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔄</div>
+                        <div>Reset Student Exam</div>
+                    </a>
+                    <a href="/admin/add_question" class="btn btn-primary" style="text-align: center; padding: 2rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">➕</div>
+                        <div>Add / Upload Questions</div>
+                    </a>
+                </div>
             </div>
 
-            <!-- Question Management -->
+            <!-- Question Bank Summary -->
             <div class="glass-card" style="margin-top: 2rem;">
-                <h3 style="margin-bottom: 1.5rem;">Question Management</h3>
-
-                <!-- Add Question Form -->
-                <form id="addQuestionForm" style="margin-bottom: 2rem;">
-                    <div class="form-group">
-                        <label for="question">Question</label>
-                        <input type="text" id="question" name="question" class="form-control" required>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3>Question Bank</h3>
+                    <div style="display: flex; gap: 1rem;">
+                        <button id="deleteSelectedBtn" class="btn btn-danger" style="display: none;"
+                            onclick="deleteSelectedQuestions()">
+                            Delete Selected (<span id="selectedCount">0</span>)
+                        </button>
+                        <button class="btn btn-outline" style="border-color: var(--error); color: var(--error);"
+                            onclick="deleteAllQuestions()">
+                            Delete ALL Questions
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label for="optionA">Option A</label>
-                        <input type="text" id="optionA" name="optionA" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="optionB">Option B</label>
-                        <input type="text" id="optionB" name="optionB" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="optionC">Option C</label>
-                        <input type="text" id="optionC" name="optionC" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="optionD">Option D</label>
-                        <input type="text" id="optionD" name="optionD" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="correct">Correct Answer</label>
-                        <select id="correct" name="correct" class="form-control" required>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="subject">Subject</label>
-                        <input type="text" id="subject" name="subject" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Add Question</button>
-                </form>
-
+                </div>
                 <div id="questionsContainer">
                     <p class="text-center" style="color: var(--text-muted);">Loading questions...</p>
                 </div>
@@ -181,6 +86,9 @@
     </section>
 
     <script>
+        let allQuestions = [];
+        let selectedQuestions = new Set();
+
         // Load all students
         async function loadStudents() {
             try {
@@ -240,109 +148,149 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    const container = document.getElementById('questionsContainer');
-
-                    if (data.questions.length === 0) {
-                        container.innerHTML = '<p class="text-center" style="color: var(--text-muted); padding: 2rem;">No questions found.</p>';
-                        return;
-                    }
-
-                    container.innerHTML = `
-                        <div class="table-container">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Question</th>
-                                        <th>Subject</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${data.questions.map(q => `
-                                        <tr>
-                                            <td>${q.question}</td>
-                                            <td>${q.subject}</td>
-                                            <td>
-                                                <button class="btn btn-danger" onclick="deleteQuestion('${q.id}')">Delete</button>
-                                            </td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
+                    allQuestions = data.questions;
+                    renderQuestions();
                 }
             } catch (error) {
                 console.error('Failed to load questions');
             }
         }
 
-        // Reset Exam
-        document.getElementById('resetExamForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            selectedQuestions.clear();
+            updateBulkActionUI();
 
-            const student_roll = document.getElementById('resetRoll').value;
-            const subject = document.getElementById('resetSubject').value;
+            if (allQuestions.length === 0) {
+                container.innerHTML = '<p class="text-center" style="color: var(--text-muted); padding: 2rem;">No questions found.</p>';
+                return;
+            }
 
-            if (!confirm(`Are you sure you want to reset the ${subject} exam for student ${student_roll}?`)) {
+            container.innerHTML = `
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                                </th>
+                                <th>Question</th>
+                                <th>Subject</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${allQuestions.map(q => `
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="question-checkbox" value="${q.id}" onchange="toggleSelection('${q.id}')">
+                                    </td>
+                                    <td>${q.question}</td>
+                                    <td>${q.subject}</td>
+                                    <td>
+                                        <button class="btn btn-danger" onclick="deleteQuestion('${q.id}')">Delete</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.question-checkbox');
+
+            checkboxes.forEach(cb => {
+                cb.checked = selectAll.checked;
+                if (selectAll.checked) {
+                    selectedQuestions.add(cb.value);
+                } else {
+                    selectedQuestions.delete(cb.value);
+                }
+            });
+            updateBulkActionUI();
+        }
+
+        function toggleSelection(id) {
+            if (selectedQuestions.has(id)) {
+                selectedQuestions.delete(id);
+            } else {
+                selectedQuestions.add(id);
+            }
+
+            // Update Select All checkbox state
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.question-checkbox');
+            selectAll.checked = selectedQuestions.size === checkboxes.length && checkboxes.length > 0;
+
+            updateBulkActionUI();
+        }
+
+        function updateBulkActionUI() {
+            const btn = document.getElementById('deleteSelectedBtn');
+            const countSpan = document.getElementById('selectedCount');
+
+            if (selectedQuestions.size > 0) {
+                btn.style.display = 'inline-block';
+                countSpan.textContent = selectedQuestions.size;
+            } else {
+                btn.style.display = 'none';
+            }
+        }
+
+        async function deleteSelectedQuestions() {
+            if (!confirm(`Are you sure you want to delete ${selectedQuestions.size} questions?`)) {
                 return;
             }
 
             try {
-                const response = await fetch('/api/admin/reset_exam', {
+                const response = await fetch('/api/admin/questions/delete_bulk', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ student_roll, subject })
+                    body: JSON.stringify({ ids: Array.from(selectedQuestions) })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
-                    alert('Exam reset successfully!');
-                    document.getElementById('resetExamForm').reset();
-                    loadStudents(); // Reload students to update status if needed
+                    alert(data.message);
+                    loadQuestions();
                 } else {
                     alert('Error: ' + data.message);
                 }
             } catch (error) {
-                alert('Failed to reset exam. Please try again.');
+                alert('Failed to delete selected questions.');
             }
-        });
+        }
 
-        // Add new question
-        document.getElementById('addQuestionForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
+        async function deleteAllQuestions() {
+            if (!confirm('WARNING: This will delete ALL questions from the database. This action cannot be undone. Are you sure?')) {
+                return;
+            }
 
-            const question = document.getElementById('question').value;
-            const options = [
-                document.getElementById('optionA').value,
-                document.getElementById('optionB').value,
-                document.getElementById('optionC').value,
-                document.getElementById('optionD').value
-            ];
-            const correct = document.getElementById('correct').value;
-            const subject = document.getElementById('subject').value;
+            if (!confirm('Double Check: Are you absolutely sure you want to delete EVERYTHING?')) {
+                return;
+            }
 
             try {
-                const response = await fetch('/api/admin/questions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question, options, correct, subject })
+                const response = await fetch('/api/admin/questions/all', {
+                    method: 'DELETE'
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
-                    alert('Question added successfully!');
+                    alert(data.message);
                     loadQuestions();
-                    document.getElementById('addQuestionForm').reset();
                 } else {
                     alert('Error: ' + data.message);
                 }
             } catch (error) {
-                alert('Failed to add question. Please try again.');
+                alert('Failed to delete all questions.');
             }
-        });
+        }
 
         // Delete a question
         async function deleteQuestion(questionId) {

@@ -598,6 +598,139 @@ def server_error(e):
 
 # ==================== RUN APP ====================
 
+@app.route('/admin/reset_exam')
+@admin_required
+def reset_exam_page():
+    """Admin Reset Exam Page"""
+    return render_template('admin_reset_exam.html')
+
+@app.route('/admin/add_question')
+@admin_required
+def add_question_page():
+    """Admin Add Question Page"""
+    return render_template('admin_add_question.html')
+
+@app.route('/api/admin/upload_questions', methods=['POST'])
+@admin_required
+def upload_questions():
+    """Bulk upload questions via CSV"""
+    if 'file' not in request.files:
+        return jsonify({'success': False, 'message': 'No file part'}), 400
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'success': False, 'message': 'No selected file'}), 400
+        
+    if not file.filename.endswith('.csv'):
+        return jsonify({'success': False, 'message': 'File must be a CSV'}), 400
+
+    try:
+        stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+        csv_input = csv.reader(stream)
+        
+        # Skip header
+        header = next(csv_input, None)
+        if not header:
+            return jsonify({'success': False, 'message': 'Empty file'}), 400
+
+        count = 0
+        errors = []
+        
+        for i, row in enumerate(csv_input):
+            try:
+                # Expected format: Question, Option A, Option B, Option C, Option D, Correct Answer, Subject
+                if len(row) < 7:
+                    continue
+                    
+                question_text = row[0].strip()
+                options = [row[1].strip(), row[2].strip(), row[3].strip(), row[4].strip()]
+                correct = row[5].strip().upper()  # Expecting 'A', 'B', 'C', or 'D'
+                subject = row[6].strip()
+                
+                if not all([question_text, all(options), correct, subject]):
+                    continue
+                    
+                # Map 'A', 'B', 'C', 'D' to the actual option text if needed, 
+                # but our model stores the correct option value (text).
+                # Wait, the current model stores the correct option VALUE (text), not the index/letter.
+                # Let's check the Question.create method.
+                # It takes (question, options, correct_answer, subject).
+                # And the UI sends the VALUE of the correct option.
+                
+                # Let's map the letter to the value
+                option_map = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
+                if correct in option_map:
+                    correct_val = options[option_map[correct]]
+                else:
+                    # Assume it might be the full text
+                    correct_val = correct
+
+                Question.create(question_text, options, correct_val, subject)
+                count += 1
+            except Exception as e:
+                errors.append(f"Row {i+2}: {str(e)}")
+        
+        return jsonify({
+            'success': True, 
+            'message': 'Upload processed', 
+            'count': count,
+            'errors': errors
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/admin/sample_csv')
+@admin_required
+def sample_csv():
+    """Generate sample CSV for questions"""
+    si = io.StringIO()
+    cw = csv.writer(si)
+    cw.writerow(['Question', 'Option A', 'Option B', 'Option C', 'Option D', 'Correct Answer', 'Subject'])
+    cw.writerow(['What is the output of print(2**3)?', '6', '8', '9', '12', 'B', 'Python'])
+    cw.writerow(['HTML stands for?', 'Hyper Text Markup Language', 'High Text Machine Language', 'Hyper Tool Multi Language', 'None', 'A', 'Web Design'])
+    
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=sample_questions.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
+
+@app.route('/api/admin/questions/all', methods=['DELETE'])
+@admin_required
+def delete_all_questions():
+    """Delete ALL questions"""
+    try:
+        result = mongo.db.questions.delete_many({})
+        return jsonify({
+            'success': True, 
+            'message': f'Deleted {result.deleted_count} questions'
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/admin/questions/delete_bulk', methods=['POST'])
+@admin_required
+def delete_bulk_questions():
+    """Delete selected questions"""
+    try:
+        data = request.get_json()
+        question_ids = data.get('ids', [])
+        
+        if not question_ids:
+            return jsonify({'success': False, 'message': 'No questions selected'}), 400
+            
+        # Convert string IDs to ObjectIds
+        object_ids = [ObjectId(qid) for qid in question_ids]
+        
+        result = mongo.db.questions.delete_many({'_id': {'$in': object_ids}})
+        
+        return jsonify({
+            'success': True, 
+            'message': f'Deleted {result.deleted_count} questions'
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

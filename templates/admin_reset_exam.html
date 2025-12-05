@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Exam - Admin Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">🎓 Admin Portal</div>
+            <ul class="navbar-nav">
+                <li><a href="/admin/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/admin/logout" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container" style="max-width: 600px;">
+            <div class="glass-card">
+                <h2 class="text-center" style="margin-bottom: 2rem;">Reset Student Exam</h2>
+                <p class="text-center" style="color: var(--text-muted); margin-bottom: 2rem;">
+                    Allow a student to retake an exam for a specific subject.
+                </p>
+
+                <form id="resetExamForm">
+                    <div class="form-group">
+                        <label for="resetRoll" class="form-label">Student Roll Number</label>
+                        <input type="text" id="resetRoll" name="student_roll" class="form-input" required
+                            placeholder="e.g. OL20250001">
+                    </div>
+                    <div class="form-group">
+                        <label for="resetSubject" class="form-label">Subject</label>
+                        <select id="resetSubject" name="subject" class="form-input" required>
+                            <option value="" disabled selected>Select Subject</option>
+                            <option value="Python">Python</option>
+                            <option value="Web Design">Web Design</option>
+                            <option value="IoT">IoT</option>
+                            <option value="Computer Fundamentals">Computer Fundamentals</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-danger" style="width: 100%;">Reset Exam</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('resetExamForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const student_roll = document.getElementById('resetRoll').value;
+            const subject = document.getElementById('resetSubject').value;
+
+            if (!confirm(`Are you sure you want to reset the ${subject} exam for student ${student_roll}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/reset_exam', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ student_roll, subject })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Exam reset successfully!');
+                    document.getElementById('resetExamForm').reset();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Failed to reset exam. Please try again.');
+            }
+        });
+    </script>
+</body>
+
+</html>
