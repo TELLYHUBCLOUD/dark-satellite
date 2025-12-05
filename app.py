@@ -198,11 +198,14 @@ def exam_page(subject):
                          duration=app.config['EXAM_DURATION_MINUTES'],
                          subject=subject)
 
+from urllib.parse import unquote
+
 @app.route('/api/start_exam/<subject>', methods=['POST'])
 @login_required
 def start_exam(subject):
     """Start exam and get questions for a specific subject"""
     try:
+        subject = unquote(subject)
         student_roll = session.get('student_roll')
         
         # Check if exam already exists for this subject

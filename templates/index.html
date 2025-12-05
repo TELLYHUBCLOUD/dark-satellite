@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container navbar-content">
@@ -27,20 +29,20 @@
             <h1 class="hero-title">Select Your Subject</h1>
             <p class="hero-subtitle">Choose a subject to start the exam.</p>
             <div class="hero-buttons">
-                <div class="form-group">
-                    <select id="subject-select" class="form-control">
+                <div class="subject-select-container">
+                    <select id="subject-select" class="subject-select">
                         {% for subject in subjects %}
-                            <option value="{{ subject }}">{{ subject }}</option>
+                        <option value="{{ subject }}">{{ subject }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <button id="start-exam-btn" class="btn btn-primary btn-lg">Start Exam</button>
+                <button id="start-exam-btn" class="btn btn-primary btn-lg" style="min-width: 200px;">Start Exam</button>
             </div>
         </div>
     </section>
 
     <script>
-        document.getElementById('start-exam-btn').addEventListener('click', function() {
+        document.getElementById('start-exam-btn').addEventListener('click', function () {
             var subject = document.getElementById('subject-select').value;
             if (subject) {
                 window.location.href = '/exam/' + subject;
@@ -49,4 +51,5 @@
     </script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
+
 </html>
