@@ -88,9 +88,10 @@ def register():
         email = sanitize_input(data.get('email', ''))
         password = data.get('password', '')
         phone = sanitize_input(data.get('phone', ''))
+        subject = sanitize_input(data.get('subject', ''))
         
         # Validation
-        if not all([name, email, password, phone]):
+        if not all([name, email, password, phone, subject]):
             return jsonify({'success': False, 'message': 'All fields are required'}), 400
         
         if not validate_email(email):
@@ -98,12 +99,12 @@ def register():
         
         if not validate_phone(phone):
             return jsonify({'success': False, 'message': 'Phone must be 10 digits'}), 400
-        
+            
         if len(password) < 6:
             return jsonify({'success': False, 'message': 'Password must be at least 6 characters'}), 400
-        
+            
         # Create student
-        student, error = Student.create(name, email, password, phone)
+        student, error = Student.create(name, email, password, phone, subject)
         
         if error:
             return jsonify({'success': False, 'message': error}), 400
@@ -186,8 +187,8 @@ def exam_page(subject):
     """Exam interface page"""
     student_roll = session.get('student_roll')
     
-    # Check if exam already exists
-    existing_exam = Exam.get_by_student(student_roll)
+    # Check if exam already exists for this subject
+    existing_exam = Exam.get_by_student_and_subject(student_roll, subject)
     
     if existing_exam and existing_exam['status'] == 'completed':
         return redirect(url_for('result_page', roll_number=student_roll))

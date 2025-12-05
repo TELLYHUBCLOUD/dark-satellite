@@ -45,6 +45,17 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="form-label">Preferred Subject</label>
+                        <select id="subject" class="form-input" required>
+                            <option value="" disabled selected>Select a subject</option>
+                            <option value="Python">Python</option>
+                            <option value="Web Design">Web Design</option>
+                            <option value="IoT">IoT</option>
+                            <option value="Computer Fundamentals">Computer Fundamentals</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label class="form-label">Password</label>
                         <input type="password" id="password" class="form-input" placeholder="Minimum 6 characters"
                             required minlength="6">
@@ -74,6 +85,7 @@
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
+            const subject = document.getElementById('subject').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -95,7 +107,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ name, email, phone, password })
+                    body: JSON.stringify({ name, email, phone, password, subject })
                 });
 
                 const data = await response.json();

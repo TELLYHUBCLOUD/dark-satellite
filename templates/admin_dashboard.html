@@ -100,122 +100,278 @@
 
             <!-- All Students -->
             <div class="glass-card" style="margin-top: 2rem;">
-                async function loadStudents() {
-                try {
+                <h3 style="margin-bottom: 1.5rem;">All Registered Students</h3>
+                <div id="studentsContainer">
+                    <p class="text-center" style="color: var(--text-muted);">Loading students...</p>
+                </div>
+            </div>
+
+            <!-- Reset Exam Management -->
+            <div class="glass-card" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1.5rem;">Reset Student Exam</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">Use this to allow a student to retake an exam
+                    for a specific subject.</p>
+
+                <form id="resetExamForm">
+                    <div class="form-group">
+                        <label for="resetRoll">Student Roll Number</label>
+                        <input type="text" id="resetRoll" name="student_roll" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="resetSubject">Subject</label>
+                        <select id="resetSubject" name="subject" class="form-control" required>
+                            <!-- Options will be populated or free text -->
+                            <option value="Python">Python</option>
+                            <option value="Web Design">Web Design</option>
+                            <option value="IoT">IoT</option>
+                            <option value="Computer Fundamentals">Computer Fundamentals</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Reset Exam</button>
+                </form>
+            </div>
+
+            <!-- Question Management -->
+            <div class="glass-card" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1.5rem;">Question Management</h3>
+
+                <!-- Add Question Form -->
+                <form id="addQuestionForm" style="margin-bottom: 2rem;">
+                    <div class="form-group">
+                        <label for="question">Question</label>
+                        <input type="text" id="question" name="question" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="optionA">Option A</label>
+                        <input type="text" id="optionA" name="optionA" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="optionB">Option B</label>
+                        <input type="text" id="optionB" name="optionB" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="optionC">Option C</label>
+                        <input type="text" id="optionC" name="optionC" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="optionD">Option D</label>
+                        <input type="text" id="optionD" name="optionD" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="correct">Correct Answer</label>
+                        <select id="correct" name="correct" class="form-control" required>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Question</button>
+                </form>
+
+                <div id="questionsContainer">
+                    <p class="text-center" style="color: var(--text-muted);">Loading questions...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Load all students
+        async function loadStudents() {
+            try {
                 const response = await fetch('/api/admin/students');
                 const data = await response.json();
 
                 if (data.success) {
-                const container = document.getElementById('studentsContainer');
+                    const container = document.getElementById('studentsContainer');
 
-                if (data.students.length === 0) {
-                container.innerHTML = '<p class="text-center" style="color: var(--text-muted); padding: 2rem;">No
-                    students registered yet</p>';
-                return;
-                }
+                    if (data.students.length === 0) {
+                        container.innerHTML = '<p class="text-center" style="color: var(--text-muted); padding: 2rem;">No students registered yet</p>';
+                        return;
+                    }
 
-                container.innerHTML = `
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Roll Number</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Exam Status</th>
-                                <th>Registered At</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${data.students.map(student => `
-                            <tr>
-                                <td>${student.roll_number}</td>
-                                <td>${student.name}</td>
-                                <td>${student.email}</td>
-                                <td>${student.phone}</td>
-                                <td>
-                                    ${student.exam_taken
-                                    ? '<span style="color: var(--success);">✓ Completed</span>'
-                                    : '<span style="color: var(--warning);">⏳ Pending</span>'}
-                                </td>
-                                <td>${student.registered_at}</td>
-                            </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-                `;
+                    container.innerHTML = `
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Roll Number</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Exam Status</th>
+                                        <th>Registered At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.students.map(student => `
+                                        <tr>
+                                            <td>${student.roll_number}</td>
+                                            <td>${student.name}</td>
+                                            <td>${student.email}</td>
+                                            <td>${student.phone}</td>
+                                            <td>
+                                                ${student.exam_taken
+                            ? '<span style="color: var(--success);">✓ Completed</span>'
+                            : '<span style="color: var(--warning);">⏳ Pending</span>'}
+                                            </td>
+                                            <td>${student.registered_at}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
                 }
-                } catch (error) {
+            } catch (error) {
                 console.error('Failed to load students');
-                }
-                }
+            }
+        }
 
-                // Load all questions
-                async function loadQuestions() {
-                try {
+        // Load all questions
+        async function loadQuestions() {
+            try {
                 const response = await fetch('/api/admin/questions');
                 const data = await response.json();
 
                 if (data.success) {
-                const container = document.getElementById('questionsContainer');
+                    const container = document.getElementById('questionsContainer');
 
-                if (data.questions.length === 0) {
-                container.innerHTML = '<p class="text-center" style="color: var(--text-muted); padding: 2rem;">No
-                    questions found.</p>';
-                return;
+                    if (data.questions.length === 0) {
+                        container.innerHTML = '<p class="text-center" style="color: var(--text-muted); padding: 2rem;">No questions found.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Question</th>
+                                        <th>Subject</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.questions.map(q => `
+                                        <tr>
+                                            <td>${q.question}</td>
+                                            <td>${q.subject}</td>
+                                            <td>
+                                                <button class="btn btn-danger" onclick="deleteQuestion('${q.id}')">Delete</button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
                 }
+            } catch (error) {
+                console.error('Failed to load questions');
+            }
+        }
 
-                container.innerHTML = `
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Subject</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${data.questions.map(q => `
-                            <tr>
-                                <td>${q.question}</td>
-                                <td>${q.subject}</td>
-                                <td>
-                                    <button class="btn btn-danger" onclick="deleteQuestion('${q.id}')">Delete</button>
-                                </td>
-                            </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-                `;
-                document.getElementById('optionB').value,
-                document.getElementById('optionC').value,
-                document.getElementById('optionD').value
-                ];
-                const correct = document.getElementById('correct').value;
-                const subject = document.getElementById('subject').value;
+        // Reset Exam
+        document.getElementById('resetExamForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-                try {
-                const response = await fetch('/api/admin/questions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question, options, correct, subject })
+            const student_roll = document.getElementById('resetRoll').value;
+            const subject = document.getElementById('resetSubject').value;
+
+            if (!confirm(`Are you sure you want to reset the ${subject} exam for student ${student_roll}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/reset_exam', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ student_roll, subject })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
-                alert('Question added successfully!');
-                loadQuestions();
-                document.getElementById('addQuestionForm').reset();
+                    alert('Exam reset successfully!');
+                    document.getElementById('resetExamForm').reset();
+                    loadStudents(); // Reload students to update status if needed
                 } else {
-                alert('Error: ' + data.message);
+                    alert('Error: ' + data.message);
                 }
+            } catch (error) {
+                alert('Failed to reset exam. Please try again.');
+            }
+        });
+
+        // Add new question
+        document.getElementById('addQuestionForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const question = document.getElementById('question').value;
+            const options = [
+                document.getElementById('optionA').value,
+                document.getElementById('optionB').value,
+                document.getElementById('optionC').value,
+                document.getElementById('optionD').value
+            ];
+            const correct = document.getElementById('correct').value;
+            const subject = document.getElementById('subject').value;
+
+            try {
+                const response = await fetch('/api/admin/questions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question, options, correct, subject })
                 });
-                </script>
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Question added successfully!');
+                    loadQuestions();
+                    document.getElementById('addQuestionForm').reset();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Failed to add question. Please try again.');
+            }
+        });
+
+        // Delete a question
+        async function deleteQuestion(questionId) {
+            if (confirm('Are you sure you want to delete this question?')) {
+                try {
+                    const response = await fetch('/api/admin/questions/' + questionId, {
+                        method: 'DELETE'
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        alert('Question deleted successfully!');
+                        loadQuestions();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Failed to delete question. Please try again.');
+                }
+            }
+        }
+
+        // Load data on page load
+        window.addEventListener('load', () => {
+            loadStudents();
+            loadQuestions();
+        });
+    </script>
 </body>
 
 </html>

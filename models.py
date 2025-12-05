@@ -51,7 +51,7 @@ class Student:
     """Student model"""
     
     @staticmethod
-    def create(name, email, password, phone):
+    def create(name, email, password, phone, subject=None):
         """Create a new student"""
         db = db_manager.get_db()
         
@@ -71,6 +71,7 @@ class Student:
             'email': email,
             'password': hash_password(password),
             'phone': phone,
+            'subject': subject,
             'created_at': datetime.now(),
             'exam_taken': False
         }
