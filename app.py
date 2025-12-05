@@ -472,19 +472,29 @@ def get_students():
         # Format students
         student_list = []
         for student in students:
-            # Get completed exams for this student
-            exams = Exam.get_by_student(student['roll_number'])
-            completed_subjects = [e['subject'] for e in exams if e.get('status') == 'completed']
-            
-            student_list.append({
-                'roll_number': student['roll_number'],
-                'name': student['name'],
-                'email': student['email'],
-                'phone': student['phone'],
-                'exam_taken': len(completed_subjects) > 0,
-                'completed_subjects': completed_subjects,
-                'registered_at': format_datetime(student['created_at'])
-            })
+            try:
+                # Get completed exams for this student
+                roll_number = student.get('roll_number')
+                if not roll_number:
+                    continue
+                    
+                exams = Exam.get_by_student(roll_number)
+                completed_subjects = []
+                if exams:
+                    completed_subjects = [e.get('subject', 'Unknown') for e in exams if e.get('status') == 'completed']
+                
+                student_list.append({
+                    'roll_number': roll_number,
+                    'name': student.get('name', 'Unknown'),
+                    'email': student.get('email', ''),
+                    'phone': student.get('phone', ''),
+                    'exam_taken': len(completed_subjects) > 0,
+                    'completed_subjects': completed_subjects,
+                    'registered_at': format_datetime(student.get('created_at', datetime.now()))
+                })
+            except Exception as e:
+                print(f"Error processing student {student.get('_id')}: {e}")
+                continue
         
         return jsonify({
             'success': True,
@@ -511,13 +521,17 @@ def get_questions():
         # Format questions
         question_list = []
         for q in questions:
-            question_list.append({
-                'id': str(q['_id']),
-                'question': q['question'],
-                'subject': q['subject'],
-                'options': q['options'],
-                'correct': q['correct']
-            })
+            try:
+                question_list.append({
+                    'id': str(q['_id']),
+                    'question': q.get('question', ''),
+                    'subject': q.get('subject', ''),
+                    'options': q.get('options', []),
+                    'correct': q.get('correct', '')
+                })
+            except Exception as e:
+                print(f"Error processing question {q.get('_id')}: {e}")
+                continue
         
         return jsonify({
             'success': True,
