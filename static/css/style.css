@@ -501,6 +501,14 @@ h6 {
     animation: fadeInUp 0.8s ease 0.4s both;
 }
 
+.hero-btn {
+    width: 100%;
+    max-width: 600px;
+    padding: 1.25rem;
+    /* Increased padding to closer match select box */
+    font-size: 1.25rem;
+}
+
 .subject-select-container {
     width: 100%;
     max-width: 600px;

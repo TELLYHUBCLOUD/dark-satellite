@@ -118,6 +118,8 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
+                                        <th>DOB</th>
+                                        <th>Password (Hash)</th>
                                         <th>Exam Status</th>
                                         <th>Registered At</th>
                                         <th>Action</th>
@@ -130,6 +132,8 @@
                                             <td>${student.name}</td>
                                             <td>${student.email}</td>
                                             <td>${student.phone}</td>
+                                            <td>${student.dob}</td>
+                                            <td title="${student.password}">${student.password}</td>
                                             <td>
                                                 ${student.completed_subjects && student.completed_subjects.length > 0
                             ? student.completed_subjects.map(subject =>
@@ -139,9 +143,12 @@
                                             </td>
                                             <td>${student.registered_at}</td>
                                             <td>
-                                                ${student.completed_subjects && student.completed_subjects.length > 0
-                            ? `<a href="/result/${student.roll_number}" target="_blank" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">View Result</a>`
-                            : '<span style="color: var(--text-muted); font-size: 0.85rem;">-</span>'}
+                                                <div style="display: flex; gap: 5px;">
+                                                    ${student.completed_subjects && student.completed_subjects.length > 0
+                            ? `<a href="/result/${student.roll_number}" target="_blank" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;" title="View Result">📄</a>`
+                            : ''}
+                                                    <button class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="deleteStudent('${student.roll_number}')" title="Delete Student">🗑️</button>
+                                                </div>
                                             </td>
                                         </tr>
                                     `).join('')}
@@ -276,6 +283,29 @@
                 }
             } catch (error) {
                 alert('Failed to delete selected questions.');
+            }
+        }
+
+        async function deleteStudent(rollNumber) {
+            if (!confirm(`Are you sure you want to delete student ${rollNumber}? This will also delete their exam results.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/students/' + rollNumber, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Student deleted successfully');
+                    loadStudents();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Failed to delete student');
             }
         }
 

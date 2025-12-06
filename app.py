@@ -492,6 +492,8 @@ def get_students():
                     'name': student.get('name', 'Unknown'),
                     'email': student.get('email', ''),
                     'phone': student.get('phone', ''),
+                    'dob': student.get('dob', '-'),
+                    'password': student.get('password', '')[:10] + '...', # Truncate hash
                     'exam_taken': len(completed_subjects) > 0,
                     'completed_subjects': completed_subjects,
                     'registered_at': format_datetime(student.get('created_at', datetime.now()))
@@ -766,6 +768,22 @@ def delete_all_students():
             'success': True, 
             'message': f'Deleted {result.deleted_count} students'
         })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/admin/students/<roll_number>', methods=['DELETE'])
+@admin_required
+def delete_student(roll_number):
+    """Delete a single student"""
+    try:
+        db = db_manager.get_db()
+        result = db.students.delete_one({'roll_number': roll_number})
+        
+        if result.deleted_count > 0:
+            return jsonify({'success': True, 'message': 'Student deleted successfully'})
+        else:
+            return jsonify({'success': False, 'message': 'Student not found'}), 404
+            
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
