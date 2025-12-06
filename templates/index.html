@@ -29,6 +29,8 @@
             <h1 class="hero-title">Select Your Subject</h1>
             <p class="hero-subtitle">Choose a subject to start the exam.</p>
             <div class="hero-buttons">
+                <a href="{{ url_for('login_page') }}" class="btn btn-outline btn-lg mb-2"
+                    style="min-width: 200px;">Student Login</a>
                 <div class="subject-select-container">
                     <select id="subject-select" class="subject-select">
                         {% for subject in subjects %}

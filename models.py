@@ -51,7 +51,7 @@ class Student:
     """Student model"""
     
     @staticmethod
-    def create(name, email, password, phone, subject=None):
+    def create(name, email, password, phone, dob, subject=None):
         """Create a new student"""
         db = db_manager.get_db()
         
@@ -71,6 +71,7 @@ class Student:
             'email': email,
             'password': hash_password(password),
             'phone': phone,
+            'dob': dob,
             'subject': subject,
             'created_at': datetime.now(),
             'exam_taken': False
@@ -81,13 +82,15 @@ class Student:
         return student, None
     
     @staticmethod
-    def authenticate(roll_number, password):
+    def authenticate(roll_number, password, dob):
         """Authenticate student"""
         db = db_manager.get_db()
         student = db.students.find_one({'roll_number': roll_number})
         
         if student and verify_password(password, student['password']):
-            return student
+            # Verify DOB
+            if student.get('dob') == dob:
+                return student
         return None
     
     @staticmethod

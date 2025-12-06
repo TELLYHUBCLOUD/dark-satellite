@@ -75,7 +75,9 @@ def index():
 @app.route('/register')
 def register_page():
     """Student registration page"""
-    return render_template('register.html')
+    if 'student_roll' in session:
+        return redirect(url_for('subjects_page'))
+    return render_template('auth.html', active_panel='register')
 
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -88,10 +90,11 @@ def register():
         email = sanitize_input(data.get('email', ''))
         password = data.get('password', '')
         phone = sanitize_input(data.get('phone', ''))
+        dob = sanitize_input(data.get('dob', ''))
         subject = sanitize_input(data.get('subject', ''))
         
         # Validation
-        if not all([name, email, password, phone, subject]):
+        if not all([name, email, password, phone, dob, subject]):
             return jsonify({'success': False, 'message': 'All fields are required'}), 400
         
         if not validate_email(email):
@@ -104,7 +107,7 @@ def register():
             return jsonify({'success': False, 'message': 'Password must be at least 6 characters'}), 400
             
         # Create student
-        student, error = Student.create(name, email, password, phone, subject)
+        student, error = Student.create(name, email, password, phone, dob, subject)
         
         if error:
             return jsonify({'success': False, 'message': error}), 400
@@ -123,7 +126,7 @@ def login_page():
     """Student login page"""
     if 'student_roll' in session:
         return redirect(url_for('subjects_page'))
-    return render_template('login.html')
+    return render_template('auth.html', active_panel='login')
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -133,12 +136,13 @@ def login():
         
         roll_number = sanitize_input(data.get('roll_number', ''))
         password = data.get('password', '')
+        dob = sanitize_input(data.get('dob', ''))
         
-        if not all([roll_number, password]):
+        if not all([roll_number, password, dob]):
             return jsonify({'success': False, 'message': 'All fields are required'}), 400
         
         # Authenticate student
-        student = Student.authenticate(roll_number, password)
+        student = Student.authenticate(roll_number, password, dob)
         
         if not student:
             return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
@@ -719,7 +723,7 @@ def sample_csv():
 def delete_all_questions():
     """Delete ALL questions"""
     try:
-        result = mongo.db.questions.delete_many({})
+        result = db_manager.get_db().questions.delete_many({})
         return jsonify({
             'success': True, 
             'message': f'Deleted {result.deleted_count} questions'
@@ -741,7 +745,7 @@ def delete_bulk_questions():
         # Convert string IDs to ObjectIds
         object_ids = [ObjectId(qid) for qid in question_ids]
         
-        result = mongo.db.questions.delete_many({'_id': {'$in': object_ids}})
+        result = db_manager.get_db().questions.delete_many({'_id': {'$in': object_ids}})
         
         return jsonify({
             'success': True, 
