@@ -42,7 +42,13 @@
 
             <!-- Student Management -->
             <div class="glass-card">
-                <h3 style="margin-bottom: 1.5rem;">Registered Students</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3>Registered Students</h3>
+                    <button class="btn btn-outline" style="border-color: var(--error); color: var(--error);"
+                        onclick="deleteAllStudents()">
+                        Delete ALL Registrations
+                    </button>
+                </div>
                 <div id="studentsContainer">
                     <p class="text-center" style="color: var(--text-muted);">Loading students...</p>
                 </div>
@@ -270,6 +276,33 @@
                 }
             } catch (error) {
                 alert('Failed to delete selected questions.');
+            }
+        }
+
+        async function deleteAllStudents() {
+            if (!confirm('WARNING: This will delete ALL registered students. This action cannot be undone. Are you sure?')) {
+                return;
+            }
+
+            if (!confirm('Double Check: Are you absolutely sure you want to delete ALL student data?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/students/all', {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(data.message);
+                    loadStudents();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Failed to delete all students.');
             }
         }
 

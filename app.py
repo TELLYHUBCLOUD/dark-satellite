@@ -754,6 +754,21 @@ def delete_bulk_questions():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
+
+@app.route('/api/admin/students/all', methods=['DELETE'])
+@admin_required
+def delete_all_students():
+    """Delete ALL students"""
+    try:
+        db = db_manager.get_db()
+        result = db.students.delete_many({})
+        return jsonify({
+            'success': True, 
+            'message': f'Deleted {result.deleted_count} students'
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
