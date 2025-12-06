@@ -7,13 +7,26 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Select a Subject</h1>
-        <div class="subjects-list">
-            {% for subject in subjects %}
-            <a href="{{ url_for('exam_page', subject=subject) }}" class="btn btn-primary">{{ subject }}</a>
-            {% endfor %}
+    <div class="hero">
+        <div class="subject-select-container">
+            <div class="glass-card">
+                <h1 class="text-center mb-3">Select a Subject</h1>
+                <p class="text-center mb-3 text-secondary">Choose a subject to start your exam</p>
+                
+                <div class="hero-buttons">
+                    {% for subject in subjects %}
+                    <a href="{{ url_for('exam_page', subject=subject) }}" class="btn btn-primary" style="width: 100%; display: block;">{{ subject }}</a>
+                    {% endfor %}
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm">Logout</a>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Background Elements -->
+    <div class="background-overlay"></div>
 </body>
 </html>
