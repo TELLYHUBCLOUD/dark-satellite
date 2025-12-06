@@ -1101,7 +1101,7 @@ h6 {
 }
 
 .form-container form {
-    background-color: var(--bg-card);
+    background-color: var(--bg-primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1113,13 +1113,14 @@ h6 {
 
 .form-container input,
 .form-container select {
-    background-color: var(--bg-secondary);
-    border: none;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
     padding: 12px 15px;
     margin: 8px 0;
     width: 100%;
-    color: var(--text-primary);
+    color: #1e293b;
     border-radius: var(--radius-sm);
+    font-size: 14px;
 }
 
 .input-group {
