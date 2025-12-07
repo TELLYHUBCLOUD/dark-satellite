@@ -384,6 +384,20 @@ def result_page(roll_number):
         return render_template('error.html', message=str(e)), 500
 
 # ==================== ADMIN ROUTES ====================
+
+@app.route('/admin/login')
+def admin_login_page():
+    """Admin login page"""
+    if 'admin_username' in session:
+        return redirect(url_for('admin_dashboard'))
+    return render_template('admin_login.html')
+
+@app.route('/api/admin/login', methods=['POST'])
+def admin_login():
+    """Admin login API"""
+    try:
+        data = request.get_json()
+        
         username = sanitize_input(data.get('username', ''))
         password = data.get('password', '')
         

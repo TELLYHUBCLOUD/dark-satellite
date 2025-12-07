@@ -11,6 +11,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hidden {
+            display: none !important;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+    </style>
 </head>
 
 <body>
@@ -65,7 +105,13 @@
         </div>
     </section>
 
-    </section>
+
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner"></div>
+        <p class="loading-text">Starting Exam Environment...</p>
+    </div>
 
     <script>
         // Typing Effect Script
@@ -92,7 +138,13 @@
         document.getElementById('start-exam-btn').addEventListener('click', function () {
             var subject = document.getElementById('subject-select').value;
             if (subject) {
-                window.location.href = '/exam/' + subject;
+                // Show loading overlay
+                document.getElementById('loading-overlay').classList.remove('hidden');
+
+                // Small delay to ensure overlay renders before navigation (optional but smooths UX)
+                setTimeout(() => {
+                    window.location.href = '/exam/' + subject;
+                }, 100);
             }
         });
     </script>

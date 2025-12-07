@@ -16,19 +16,44 @@ class Database:
             cls._instance = super(Database, cls).__new__(cls)
         return cls._instance
     
+    
     def connect(self, mongo_uri=None):
-        """Connect to MongoDB"""
+        """Connect to MongoDB with retry logic"""
         if self._client is None:
             uri = mongo_uri or Config.MONGO_URI
-            # Serverless-friendly settings with shorter timeouts
-            self._client = MongoClient(
-                uri,
-                serverSelectionTimeoutMS=5000,  # 5 seconds
-                connectTimeoutMS=5000,
-                socketTimeoutMS=5000,
-                maxPoolSize=1  # Limit connections for serverless
-            )
-            self._db = self._client[Config.DB_NAME]
+            
+            # Retry logic
+            import time
+            from pymongo.errors import ConnectionFailure
+            
+            max_retries = 3
+            retry_delay = 1
+            
+            for attempt in range(max_retries):
+                try:
+                    # Serverless-friendly settings with shorter timeouts
+                    self._client = MongoClient(
+                        uri,
+                        serverSelectionTimeoutMS=5000,
+                        connectTimeoutMS=5000,
+                        socketTimeoutMS=5000,
+                        maxPoolSize=1
+                    )
+                    # Verify connection
+                    self._db = self._client[Config.DB_NAME]
+                    self._client.admin.command('ping')
+                    print(f"Connected to MongoDB on attempt {attempt+1}")
+                    break
+                except ConnectionFailure as e:
+                    print(f"Connection failed (Attempt {attempt+1}/{max_retries}): {e}")
+                    if attempt < max_retries - 1:
+                        time.sleep(retry_delay)
+                    else:
+                        print("Could not connect to database after retries.")
+                        # Don't raise here to allow app to start, but db calls will fail later
+                        self._client = None
+                        self._db = None
+        
         return self._db
     
     def get_db(self):
