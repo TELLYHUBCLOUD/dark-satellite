@@ -33,7 +33,6 @@
             <li><a href="/register" class="nav-link"><i class="fas fa-user-plus"></i> Register</a></li>
             <li><a href="/login" class="nav-link"><i class="fas fa-sign-in-alt"></i> Student Login</a></li>
             <li><a href="/admin/login" class="nav-link"><i class="fas fa-user-shield"></i> Admin</a></li>
-            <li><a href="#portfolio" class="nav-link"><i class="fas fa-id-card"></i> Developer Profile</a></li>
         </ul>
     </nav>
 
@@ -45,14 +44,6 @@
 
             <!-- Typing Effect for Developer Name -->
             <p class="typing-text-dev">MADE BY <span id="dev-name-text"></span></p>
-
-            <!-- See Developer Profile Button -->
-            <div class="mb-3">
-                <a href="#portfolio" class="btn btn-secondary btn-lg"
-                    style="border-radius: 30px; padding: 15px 40px; font-weight: bold; letter-spacing: 1px;">
-                    SEE DEVELOPER PROFILE DETAILS
-                </a>
-            </div>
 
             <!-- Exam Selection -->
             <div class="exam-selection-card glass-card fade-in-up">
@@ -68,119 +59,6 @@
                         </select>
                     </div>
                     <button id="start-exam-btn" class="btn btn-primary btn-lg hero-btn">Start Exam</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio-section">
-        <div class="container">
-            <h2 class="section-title text-center">Developer Profile</h2>
-            <div class="portfolio-grid">
-                <!-- Profile Card -->
-                <div class="profile-card glass-card">
-                    <div class="profile-header">
-                        <div class="profile-img-container">
-                            <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Ravi Kumar"
-                                class="profile-img">
-                        </div>
-                        <h3>RAVI KUMAR</h3>
-                        <p class="role">SAP End User | Data Entry Executive</p>
-                        <div class="social-links">
-                            <a href="https://linkedin.com/in/i-am-ravikumar" target="_blank"><i
-                                    class="fab fa-linkedin"></i></a>
-                            <a href="mailto:shakyar014@gmail.com"><i class="fas fa-envelope"></i></a>
-                            <a href="tel:+918400698715"><i class="fas fa-phone"></i></a>
-                        </div>
-                    </div>
-                    <div class="profile-details">
-                        <div class="detail-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>NOIDA (UP) 201301</span>
-                        </div>
-                        <p class="profile-bio">
-                            Results-driven SAP End User with over 6 years of experience in Sales, Accounts, and MIS.
-                            Specializing in SAP S/4 HANA Finance, Business One, and Process Integration.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Resume Details -->
-                <div class="resume-content">
-                    <!-- Experience -->
-                    <div class="resume-block glass-card">
-                        <h3><i class="fas fa-briefcase"></i> Professional Experience</h3>
-
-                        <div class="timeline-item">
-                            <div class="timeline-header">
-                                <h4>Data Entry Executive (SAP B1)</h4>
-                                <span class="date">06/2022 – Present</span>
-                            </div>
-                            <p class="company">Trusound Pvt Ltd. (AHUJA RADIOS) | Noida</p>
-                            <ul>
-                                <li>Process purchase orders, GRPO, and manage inventory transactions.</li>
-                                <li>Create and update Item Codes, Suppliers, and BOM.</li>
-                                <li>Assist in production processes for in-house and job workers.</li>
-                            </ul>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-header">
-                                <h4>MIS Executive</h4>
-                                <span class="date">05/2021 – 05/2022</span>
-                            </div>
-                            <p class="company">RD Automobile | Nawabganj</p>
-                            <ul>
-                                <li>Track inventory of raw materials and finished vehicles.</li>
-                                <li>Create production schedules and efficiency reports.</li>
-                                <li>Provide KPI dashboards to management.</li>
-                            </ul>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-header">
-                                <h4>Account Executive (Tally Erp 9)</h4>
-                                <span class="date">04/2019 – 03/2020</span>
-                            </div>
-                            <p class="company">Soham Infratech | Greater Noida</p>
-                            <ul>
-                                <li>General ledger, vouchers, AP/AR, Bank Reconciliation, GST/TDS.</li>
-                                <li>Payroll and Attendance integration.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Skills & Education Grid -->
-                    <div class="skills-edu-grid">
-                        <div class="resume-block glass-card">
-                            <h3><i class="fas fa-graduation-cap"></i> Education</h3>
-                            <div class="edu-item">
-                                <h4>Master of Commerce (M.COM)</h4>
-                                <p>Swami Vivekanand Subharti University</p>
-                                <span class="date">2020 – 2024</span>
-                            </div>
-                            <div class="edu-item">
-                                <h4>Bachelor of Commerce (B.COM)</h4>
-                                <p>Shri Rajendra Singh College</p>
-                                <span class="date">2017 – 2019</span>
-                            </div>
-                        </div>
-
-                        <div class="resume-block glass-card">
-                            <h3><i class="fas fa-tools"></i> Skills</h3>
-                            <div class="skills-tags">
-                                <span>SAP S/4HANA Finance</span>
-                                <span>SAP Business One</span>
-                                <span>Tally ERP 9</span>
-                                <span>MS Excel (Adv)</span>
-                                <span>MS PowerPoint</span>
-                                <span>SQL (Basic)</span>
-                                <span>Problem Solving</span>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
