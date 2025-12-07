@@ -214,3 +214,31 @@ if (typeof module !== 'undefined' && module.exports) {
         updateProgressBar
     };
 }
+
+// ==================== SIDEBAR NAVIGATION ====================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.getElementById('hamburger-btn');
+    const sidebar = document.getElementById('sidebar');
+    const closeBtn = document.getElementById('close-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function toggleSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.toggle('active');
+        hamburger.classList.toggle('active');
+        if (overlay) overlay.classList.toggle('active');
+    }
+
+    if (hamburger) {
+        hamburger.addEventListener('click', toggleSidebar);
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', toggleSidebar);
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', toggleSidebar);
+    }
+});
