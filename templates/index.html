@@ -44,11 +44,19 @@
             <h1 class="typing-text-institution" id="institution-text"></h1>
 
             <!-- Typing Effect for Developer Name -->
-            <p class="typing-text-dev">Made by <span id="dev-name-text"></span></p>
+            <p class="typing-text-dev">MADE BY <span id="dev-name-text"></span></p>
+
+            <!-- See Developer Profile Button -->
+            <div class="mb-3">
+                <a href="#portfolio" class="btn btn-secondary btn-lg"
+                    style="border-radius: 30px; padding: 15px 40px; font-weight: bold; letter-spacing: 1px;">
+                    SEE DEVELOPER PROFILE DETAILS
+                </a>
+            </div>
 
             <!-- Exam Selection -->
             <div class="exam-selection-card glass-card fade-in-up">
-                <h2>Select Your Subject</h2>
+                <h2>START EXAM NOW</h2>
                 <p class="mb-2">Choose a subject to start the exam.</p>
                 <div class="hero-buttons">
                     <a href="{{ url_for('login_page') }}" class="btn btn-outline btn-lg hero-btn">Student Login</a>
@@ -180,8 +188,8 @@
 
     <script>
         // Typing Effect Script
-        const institutionText = "Welcome to Oxford Group of Institution";
-        const devNameText = "Ravi Kumar";
+        const institutionText = "WELCOME TO OXFORD GROUP OF INSTITUTION";
+        const devNameText = "RAVI KUMAR";
 
         async function typeText(elementId, text, speed = 100) {
             const element = document.getElementById(elementId);
