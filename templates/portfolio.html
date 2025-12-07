@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Profile - Ravi Kumar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Ensure portfolio is visible immediately since it's a standalone page */
+        .portfolio-section {
+            background-color: var(--bg-dark);
+            min-height: 100vh;
+            padding-top: 80px;
+            /* Space for back button */
+        }
+
+        .back-nav {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="back-nav">
+        <a href="/" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </div>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio-section">
+        <div class="container">
+            <h2 class="section-title text-center">Developer Profile</h2>
+            <div class="portfolio-grid">
+                <!-- Profile Card -->
+                <div class="profile-card glass-card">
+                    <div class="profile-header">
+                        <div class="profile-img-container">
+                            <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Ravi Kumar"
+                                class="profile-img">
+                        </div>
+                        <h3>RAVI KUMAR</h3>
+                        <p class="role">SAP End User | Data Entry Executive</p>
+                        <div class="social-links">
+                            <a href="https://linkedin.com/in/i-am-ravikumar" target="_blank"><i
+                                    class="fab fa-linkedin"></i></a>
+                            <a href="mailto:shakyar014@gmail.com"><i class="fas fa-envelope"></i></a>
+                            <a href="tel:+918400698715"><i class="fas fa-phone"></i></a>
+                        </div>
+                    </div>
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>NOIDA (UP) 201301</span>
+                        </div>
+                        <p class="profile-bio">
+                            Results-driven SAP End User with over 6 years of experience in Sales, Accounts, and MIS.
+                            Specializing in SAP S/4 HANA Finance, Business One, and Process Integration.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Resume Details -->
+                <div class="resume-content">
+                    <!-- Experience -->
+                    <div class="resume-block glass-card">
+                        <h3><i class="fas fa-briefcase"></i> Professional Experience</h3>
+
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <h4>Data Entry Executive (SAP B1)</h4>
+                                <span class="date">06/2022 – Present</span>
+                            </div>
+                            <p class="company">Trusound Pvt Ltd. (AHUJA RADIOS) | Noida</p>
+                            <ul>
+                                <li>Process purchase orders, GRPO, and manage inventory transactions.</li>
+                                <li>Create and update Item Codes, Suppliers, and BOM.</li>
+                                <li>Assist in production processes for in-house and job workers.</li>
+                            </ul>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <h4>MIS Executive</h4>
+                                <span class="date">05/2021 – 05/2022</span>
+                            </div>
+                            <p class="company">RD Automobile | Nawabganj</p>
+                            <ul>
+                                <li>Track inventory of raw materials and finished vehicles.</li>
+                                <li>Create production schedules and efficiency reports.</li>
+                                <li>Provide KPI dashboards to management.</li>
+                            </ul>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <h4>Account Executive (Tally Erp 9)</h4>
+                                <span class="date">04/2019 – 03/2020</span>
+                            </div>
+                            <p class="company">Soham Infratech | Greater Noida</p>
+                            <ul>
+                                <li>General ledger, vouchers, AP/AR, Bank Reconciliation, GST/TDS.</li>
+                                <li>Payroll and Attendance integration.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Skills & Education Grid -->
+                    <div class="skills-edu-grid">
+                        <div class="resume-block glass-card">
+                            <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+                            <div class="edu-item">
+                                <h4>Master of Commerce (M.COM)</h4>
+                                <p>Swami Vivekanand Subharti University</p>
+                                <span class="date">2020 – 2024</span>
+                            </div>
+                            <div class="edu-item">
+                                <h4>Bachelor of Commerce (B.COM)</h4>
+                                <p>Shri Rajendra Singh College</p>
+                                <span class="date">2017 – 2019</span>
+                            </div>
+                        </div>
+
+                        <div class="resume-block glass-card">
+                            <h3><i class="fas fa-tools"></i> Skills</h3>
+                            <div class="skills-tags">
+                                <span>SAP S/4HANA Finance</span>
+                                <span>SAP Business One</span>
+                                <span>Tally ERP 9</span>
+                                <span>MS Excel (Adv)</span>
+                                <span>MS PowerPoint</span>
+                                <span>SQL (Basic)</span>
+                                <span>Problem Solving</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
