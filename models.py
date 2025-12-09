@@ -84,6 +84,10 @@ class Student:
         if db.students.find_one({'email': email}):
             return None, "Email already registered"
         
+        # Check if phone already exists
+        if db.students.find_one({'phone': phone}):
+            return None, "Phone number already registered"
+        
         # Generate unique roll number
         while True:
             roll_number = generate_roll_number()

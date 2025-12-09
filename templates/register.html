@@ -113,10 +113,10 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert(`Registration successful! Your Roll Number is: ${data.roll_number}. Please save it for login.`, 'success');
+                    showAlert(`Registration successful! Redirecting to details...`, 'success');
                     setTimeout(() => {
-                        window.location.href = '/login';
-                    }, 3000);
+                        window.location.href = `/registration_complete/${data.roll_number}`;
+                    }, 1000);
                 } else {
                     showAlert(data.message, 'error');
                 }

@@ -79,6 +79,17 @@ def register_page():
         return redirect(url_for('subjects_page'))
     return render_template('auth.html', active_panel='register')
 
+@app.route('/registration_complete/<roll_number>')
+def registration_complete(roll_number):
+    """Registration completion page"""
+    try:
+        student = Student.get_by_roll(roll_number)
+        if not student:
+            return redirect(url_for('register_page'))
+        return render_template('registration_complete.html', student=student)
+    except Exception as e:
+        return render_template('error.html', message=str(e)), 500
+
 @app.route('/api/register', methods=['POST'])
 def register():
     """Student registration API"""
