@@ -104,13 +104,11 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    alert.textContent = `Success! Roll No: ${data.roll_number}`;
+                    alert.textContent = `Success! Redirecting to details...`;
                     alert.className = 'alert-msg success';
                     setTimeout(() => {
-                        container.classList.remove("right-panel-active"); // Switch to login
-                        alert.textContent = '';
-                        document.getElementById('registerForm').reset();
-                    }, 3000);
+                        window.location.href = `/registration_complete/${data.roll_number}`;
+                    }, 1000);
                 } else {
                     alert.textContent = data.message;
                     alert.className = 'alert-msg error';
