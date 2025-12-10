@@ -346,26 +346,35 @@
 
         // Exam Start Logic
         document.getElementById('start-exam-btn').addEventListener('click', function () {
-            const subject = document.getElementById('subject-select').value;
-            const overlay = document.getElementById('loading-overlay');
+            // Check login status
+            const isLoggedIn = {{ 'true' if session.get('student_roll') else 'false'
+        }};
 
-            if (subject) {
-                overlay.classList.add('visible');
+        if (!isLoggedIn) {
+            window.location.href = "{{ url_for('login_page') }}";
+            return;
+        }
 
-                // Simulate loading for better UX
-                setTimeout(() => {
-                    window.location.href = '/exam/' + subject;
-                }, 800);
-            } else {
-                // Shake animation or visual feedback for no selection
-                const select = document.getElementById('subject-select');
-                select.style.borderColor = '#ff4757';
-                select.style.boxShadow = '0 0 0 3px rgba(255, 71, 87, 0.2)';
-                setTimeout(() => {
-                    select.style.borderColor = '';
-                    select.style.boxShadow = '';
-                }, 2000);
-            }
+        const subject = document.getElementById('subject-select').value;
+        const overlay = document.getElementById('loading-overlay');
+
+        if (subject) {
+            overlay.classList.add('visible');
+
+            // Simulate loading for better UX
+            setTimeout(() => {
+                window.location.href = '/exam/' + subject;
+            }, 800);
+        } else {
+            // Shake animation or visual feedback for no selection
+            const select = document.getElementById('subject-select');
+            select.style.borderColor = '#ff4757';
+            select.style.boxShadow = '0 0 0 3px rgba(255, 71, 87, 0.2)';
+            setTimeout(() => {
+                select.style.borderColor = '';
+                select.style.boxShadow = '';
+            }, 2000);
+        }
         });
 
         // Sidebar Logic (Reuse existing if available in main.js, else inline here for reliability)
