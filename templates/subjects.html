@@ -149,12 +149,16 @@
             {% set color_class = 'icon-iot' %}
             {% endif %}
 
-            <a href="{{ url_for('exam_page', subject=subject) }}" class="subject-card animate-slide-up"
-                style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+            <div class="subject-card animate-slide-up" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
                 <i class="{{ icon_class }} subject-icon {{ color_class }}"></i>
                 <h3 class="subject-name">{{ subject }}</h3>
-                <p style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">Click to start exam</p>
-            </a>
+                <p style="color: rgba(255,255,255,0.5); font-size: 0.9rem; margin-bottom: 1.5rem;">Click to start exam
+                </p>
+                <a href="{{ url_for('exam_page', subject=subject) }}" class="btn btn-primary"
+                    style="background: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%); border: none; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; width: 100%; text-align: center; text-decoration: none; display: inline-block;">
+                    Start Exam <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                </a>
+            </div>
             {% endfor %}
         </div>
     </div>

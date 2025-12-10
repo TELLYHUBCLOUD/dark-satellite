@@ -196,6 +196,9 @@ class Question:
     def get_random_by_subject(subject, count=100):
         """Get random questions for a specific subject"""
         db = db_manager.get_db()
+        if db is None:
+            raise Exception("Database connection failed. Please ensure MongoDB is running.")
+            
         return list(db.questions.aggregate([
             {'$match': {'subject': subject}},
             {'$sample': {'size': count}}

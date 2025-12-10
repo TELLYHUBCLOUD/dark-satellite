@@ -34,7 +34,7 @@ class Config:
     
     # Exam settings
     EXAM_DURATION_MINUTES = 100
-    TOTAL_QUESTIONS = 100
+    TOTAL_QUESTIONS = 20
     PASSING_MARKS = 40
     
     # Pagination
