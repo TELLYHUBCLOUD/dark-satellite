@@ -4,200 +4,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O Level Result</title>
-    <link href="https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap" rel="stylesheet">
+    <title>Result - Dark Satellite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     <style>
+        /* Screen Styles */
         body {
-            font-family: 'Times New Roman', serif;
-            background: #f0f0f0;
-            padding: 20px;
-        }
-
-        .result-sheet {
-            background: white;
-            max-width: 900px;
-            margin: 0 auto;
-            border: 2px solid #000;
-            padding: 30px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #000;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            margin: 5px 0;
-            font-size: 24px;
-            text-transform: uppercase;
-        }
-
-        .header h2 {
-            margin: 5px 0;
-            font-size: 18px;
-            font-weight: normal;
-        }
-
-        .student-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .detail-row {
+            font-family: 'Outfit', sans-serif;
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
             display: flex;
-            margin-bottom: 8px;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow-x: hidden;
+        }
+
+        .confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .result-card-modern {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 800px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: popUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes popUp {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .score-circle-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 8;
+        }
+
+        .circle-progress {
+            fill: none;
+            stroke: #10b981;
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            /* Start empty */
+            transition: stroke-dashoffset 1.5s ease-out;
+        }
+
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .score-percentage {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 5px;
+        }
+
+        .result-status {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        .status-pass {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .status-fail {
+            background: rgba(244, 63, 94, 0.2);
+            color: #f43f5e;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 12px;
         }
 
         .detail-label {
-            font-weight: bold;
-            width: 150px;
-        }
-
-        .result-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-
-        .result-table th,
-        .result-table td {
-            border: 1px solid #000;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .result-table th {
-            background-color: #f8f8f8;
-            font-weight: bold;
-        }
-
-        .footer {
-            margin-top: 50px;
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .print-btn {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
             display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background: #333;
-            color: white;
-            border: none;
+            margin-bottom: 0.3rem;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-action {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
             cursor: pointer;
-            font-family: sans-serif;
+            border: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-home {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-home:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-print {
+            background: #0072FF;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #0062d9;
+            transform: translateY(-2px);
+        }
+
+        /* Print Styles - Hides Modern UI, Shows Certificate */
+        .print-certificate {
+            display: none;
         }
 
         @media print {
             body {
                 background: white;
+                color: black;
                 padding: 0;
+                display: block;
             }
 
-            .result-sheet {
-                box-shadow: none;
-                border: 2px solid #000;
-                margin: 0;
+            .result-card-modern,
+            .confetti-canvas {
+                display: none !important;
+            }
+
+            .print-certificate {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+            .cert-container {
+                border: 2px solid #333;
+                padding: 40px;
                 max-width: 100%;
+                margin: 0;
             }
 
-            .print-btn,
-            .back-btn {
-                display: none;
+            .cert-header {
+                text-align: center;
+                margin-bottom: 40px;
+                border-bottom: 2px solid #333;
+                padding-bottom: 20px;
+            }
+
+            .cert-title {
+                font-size: 24px;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .cert-row {
+                display: flex;
+                margin-bottom: 10px;
+            }
+
+            .cert-label {
+                width: 150px;
+                font-weight: bold;
+            }
+
+            .cert-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 30px;
+            }
+
+            .cert-table th,
+            .cert-table td {
+                border: 1px solid #333;
+                padding: 10px;
+                text-align: center;
             }
         }
     </style>
 </head>
 
 <body>
+    <canvas id="confetti" class="confetti-canvas"></canvas>
+
     {% for exam in results %}
-    <div class="result-sheet">
-        <div class="header">
-            <h1>National Institute of Electronics and Information Technology</h1>
-            <h2>(NIELIT)</h2>
-            <h2 style="margin-top: 15px; text-decoration: underline;">O Level Course - Statement of Grades</h2>
-        </div>
+    <!-- Modern Card for Screen -->
+    <div class="result-card-modern">
+        <h2 style="margin-bottom: 2rem;">Result Statement</h2>
 
-        <div class="student-details">
-            <div>
-                <div class="detail-row">
-                    <span class="detail-label">Candidate Name:</span>
-                    <span>{{ student.name }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Registration No:</span>
-                    <span>{{ student.roll_number }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Mother's Name:</span>
-                    <span>-</span> <!-- Placeholder as not in model -->
-                </div>
-            </div>
-            <div>
-                <div class="detail-row">
-                    <span class="detail-label">Roll Number:</span>
-                    <span>{{ student.roll_number }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Exam Date:</span>
-                    <span>{{ exam.exam_date }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Institute Name:</span>
-                    <span>Oxford Group of Institution</span>
-                </div>
+        <div class="score-circle-container">
+            <svg>
+                <circle class="circle-bg" cx="100" cy="100" r="70"></circle>
+                <circle class="circle-progress" cx="100" cy="100" r="70" id="progress-circle"></circle>
+            </svg>
+            <div class="score-text">
+                <div class="score-percentage">{{ "%.0f"|format(exam.percentage) }}%</div>
+                <div class="score-label">Score</div>
             </div>
         </div>
 
-        <table class="result-table">
-            <thead>
-                <tr>
-                    <th>Sr. No.</th>
-                    <th>Module Name</th>
-                    <th>Max Marks</th>
-                    <th>Marks Obtained</th>
-                    <th>Grade</th>
-                    <th>Result</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>{{ exam.subject }}</td>
-                    <td>{{ exam.total }}</td>
-                    <td>{{ "%.1f"|format(exam.score) }}</td>
-                    <td>{{ exam.grade }}</td>
-                    <td style="font-weight: bold;">{{ exam.status }}</td>
-                </tr>
-                <!-- Placeholder for other modules if multi-exam support improves -->
-            </tbody>
-        </table>
-
-        <div style="margin-top: 20px;">
-            <p><strong>Result Date:</strong> {{ exam.exam_date }}</p>
+        <div class="result-status {{ 'status-pass' if exam.status == 'PASS' else 'status-fail' }}">
+            {{ exam.status }}
         </div>
 
-        <div class="footer">
-            <span>This is a computer-generated statement.</span>
-            <span>Controller of Examinations</span>
+        <div class="details-grid">
+            <div class="detail-item">
+                <span class="detail-label">Student Name</span>
+                <span class="detail-value">{{ student.name }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Subject</span>
+                <span class="detail-value">{{ exam.subject }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Marks Obtained</span>
+                <span class="detail-value">{{ "%.1f"|format(exam.score) }} / {{ exam.total }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Grade Awarded</span>
+                <span class="detail-value">{{ exam.grade }}</span>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="/" class="btn-action btn-home"><i class="fas fa-home"></i> Home</a>
+            <button onclick="window.print()" class="btn-action btn-print"><i class="fas fa-print"></i> Print
+                Statement</button>
         </div>
     </div>
+
+    <!-- Hidden Print Certificate -->
+    <div class="print-certificate">
+        <div class="cert-container">
+            <div class="cert-header">
+                <div class="cert-title">National Institute of Electronics and Information Technology</div>
+                <div style="font-size: 18px; margin-top: 5px;">(NIELIT)</div>
+                <div style="font-size: 20px; text-decoration: underline; margin-top: 15px;">Statement of Grades</div>
+            </div>
+
+            <div class="cert-row"><span class="cert-label">Name:</span> <span>{{ student.name }}</span></div>
+            <div class="cert-row"><span class="cert-label">Roll No:</span> <span>{{ student.roll_number }}</span></div>
+            <div class="cert-row"><span class="cert-label">Date:</span> <span>{{ exam.exam_date }}</span></div>
+
+            <table class="cert-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Max Marks</th>
+                        <th>Obtained</th>
+                        <th>Grade</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ exam.subject }}</td>
+                        <td>{{ exam.total }}</td>
+                        <td>{{ "%.1f"|format(exam.score) }}</td>
+                        <td>{{ exam.grade }}</td>
+                        <td>{{ exam.status }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 50px; display: flex; justify-content: space-between; font-size: 12px;">
+                <span>* Computer Generated Report</span>
+                <span>Controller of Examinations</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        // Progress Circle Animation
+        const percentage = {{ exam.percentage }};
+        const circle = document.getElementById('progress-circle');
+        const radius = circle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
+
+        // Color based on pass/fail
+        const isPass = "{{ exam.status }}" === "PASS";
+        circle.style.stroke = isPass ? '#10b981' : '#f43f5e';
+
+        setTimeout(() => {
+            const offset = circumference - (percentage / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }, 300);
+
+        // Confetti if Pass
+        if (isPass) {
+            const duration = 3000;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#00C6FF', '#0072FF', '#ffffff']
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#00C6FF', '#0072FF', '#ffffff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+    </script>
     {% endfor %}
-
-    <div style="text-align: center;">
-        <button onclick="window.print()" class="print-btn">Print Result</button>
-        <a href="/" class="back-btn"
-            style="text-decoration: none; color: #333; font-family: sans-serif; display: inline-block; margin-top: 10px;">Back
-            to Home</a>
-    </div>
 </body>
 
 </html>

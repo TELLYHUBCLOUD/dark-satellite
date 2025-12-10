@@ -1,32 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select a Subject</title>
+    <title>Select Subject - Dark Satellite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <div class="hero">
-        <div class="subject-select-container">
-            <div class="glass-card">
-                <h1 class="text-center mb-3">Select a Subject</h1>
-                <p class="text-center mb-3 text-secondary">Choose a subject to start your exam</p>
-                
-                <div class="hero-buttons">
-                    {% for subject in subjects %}
-                    <a href="{{ url_for('exam_page', subject=subject) }}" class="btn btn-primary" style="width: 100%; display: block;">{{ subject }}</a>
-                    {% endfor %}
-                </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
 
-                <div class="text-center mt-3">
-                    <a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm">Logout</a>
-                </div>
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 10% 20%, rgba(0, 198, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 114, 255, 0.1) 0%, transparent 20%);
+            animation: bg-pulse 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes bg-pulse {
+            0% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.2rem;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Subject Icons Mapping */
+        .icon-python {
+            color: #F7D358;
+        }
+
+        /* Yellow/Gold for Python */
+        .icon-web {
+            color: #00C6FF;
+        }
+
+        /* Blue for Web */
+        .icon-iot {
+            color: #10b981;
+        }
+
+        /* Green for IoT */
+        .icon-default {
+            color: #a78bfa;
+        }
+
+        /* Purple default */
+    </style>
+</head>
+
+<body>
+    <div class="animated-bg"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container navbar-content" style="padding: 1rem 0;">
+            <a href="/" class="navbar-brand">Dark Satellite</a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Welcome, {{ session.get('student_name',
+                    'Student') }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm"
+                    style="padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Select Your Domain</h1>
+            <p>Choose a subject to begin your assessment journey</p>
+        </div>
+
+        <div class="card-grid">
+            {% for subject in subjects %}
+            {% set icon_class = 'fa-code' %}
+            {% set color_class = 'icon-default' %}
+
+            {% if 'python' in subject|lower %}
+            {% set icon_class = 'fa-brands fa-python' %}
+            {% set color_class = 'icon-python' %}
+            {% elif 'web' in subject|lower %}
+            {% set icon_class = 'fa-solid fa-laptop-code' %}
+            {% set color_class = 'icon-web' %}
+            {% elif 'iot' in subject|lower %}
+            {% set icon_class = 'fa-solid fa-microchip' %}
+            {% set color_class = 'icon-iot' %}
+            {% endif %}
+
+            <a href="{{ url_for('exam_page', subject=subject) }}" class="subject-card animate-slide-up"
+                style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                <i class="{{ icon_class }} subject-icon {{ color_class }}"></i>
+                <h3 class="subject-name">{{ subject }}</h3>
+                <p style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">Click to start exam</p>
+            </a>
+            {% endfor %}
         </div>
     </div>
 
-    <!-- Background Elements -->
-    <div class="background-overlay"></div>
 </body>
+
 </html>
