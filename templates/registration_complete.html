@@ -145,7 +145,6 @@
                 <div style="margin-top: 2rem;">
                     <a href="/login" class="btn btn-primary" style="width: 100%; text-align: center;">
                         Proceed to Login
-                        <span id="countdown" style="font-size: 0.875rem; opacity: 0.8; margin-left: 0.5rem;">(10s)</span>
                     </a>
                 </div>
             </div>
@@ -153,19 +152,7 @@
     </section>
 
     <script>
-        // Countdown timer
-        let seconds = 10;
-        const countdownEl = document.getElementById('countdown');
-        
-        const timer = setInterval(() => {
-            seconds--;
-            countdownEl.textContent = `(${seconds}s)`;
-            
-            if (seconds <= 0) {
-                clearInterval(timer);
-                window.location.href = '/login';
-            }
-        }, 1000);
+        // Auto-redirect removed as per user request
     </script>
 </body>
 

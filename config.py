@@ -19,8 +19,9 @@ class Config:
     # Use Atlas if available, otherwise local
     if not MONGO_URI:
         MONGO_URI = MONGO_URI_LOCAL
-        print("⚠️  WARNING: Using local MongoDB. For Vercel, set MONGO_URI environment variable!")
-        print("📖 See MONGODB_ATLAS_SETUP.md for instructions")
+        print("ℹ️  INFO: Using local MongoDB (Offline Mode)")
+    else:
+        print("✅ INFO: Using production MongoDB")
     
     # Database name
     DB_NAME = 'olevel_exam'

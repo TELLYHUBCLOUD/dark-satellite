@@ -26,20 +26,19 @@ A comprehensive web-based Online Examination System designed for NIELIT O Level 
 
 ### 👨‍💻 Developer Portfolio
 *   **Dedicated Page**: Accessible via `/portfolio` or the Sidebar.
-*   **Profile**: Showcases the developer's skills, experience, and contact details.
 
 ## 🛠️ Technology Stack
 
 *   **Backend**: Python (Flask)
 *   **Database**: MongoDB (Atlas/Local)
-*   **Frontend**: HTML5, CSS3 (Glassmorphism), JavaScript (Vanilla)
+*   **Frontend**: HTML5, CSS3, JavaScript
 *   **Deployment**: Vercel-ready
 
 ## 🚀 Installation & Setup
 
 ### Prerequisites
-*   Python 3.x
-*   MongoDB Connection String
+*   Python 3.8+
+*   MongoDB (Local or Atlas)
 
 ### 1. Clone the Repository
 ```bash
@@ -53,11 +52,9 @@ pip install -r requirements.txt
 ```
 
 ### 3. Environment Configuration
-Create a `.env` file or set environment variables:
+Create a `.env` file (optional for local dev if using defaults):
 ```bash
-MONGO_URI="your_mongodb_connection_string"
-FLASK_APP=app.py
-FLASK_ENV=development
+# MONGO_URI="mongodb://localhost:27017/olevel_exam" # Default
 SECRET_KEY="your_secret_key"
 ```
 

@@ -82,35 +82,6 @@ I also thank my parents and friends for their encouragement and assistance.
 
 <div style="page-break-after: always;"></div>
 
-## 1. INTRODUCTION
-
-### 1.1 Abstract
-The **Online Examination System (O Level Exam Portal)** is a web-based application designed to facilitate the conducting of NIELIT O Level certification practice exams online. In the traditional system, conducting exams involves a lot of manual work, such as paper setting, invigilation, and manual evaluation, which is time-consuming and prone to errors. This project aims to automate the entire process, providing a secure, efficient, and user-friendly platform for students to test their knowledge and for administrators to manage exams effectively.
-
-### 1.2 Objectives
-The primary objectives of this project are:
-*   To create a paperless environment for conducting exams.
-*   To provide instant results and grading to students.
-*   To secure the examination process with authentication (Login/Signup).
-*   To generate result sheets that mimic the official NIELIT O Level certificate format.
-*   To provide an administrative interface for managing students and questions.
-
-### 1.3 Scope of the Project
-The scope of the project includes:
-*   **Student Module**: Registration, Login, Subject Selection, Taking Exams (McQ based), and Viewing Results.
-*   **Admin Module**: Secure Login, Dashboard Analytics, Student Management, and Question Management (Add/Delete).
-
----
-
-## 2. SYSTEM ANALYSIS
-
-### 2.1 Existing System
-The existing system is largely manual. Students have to visit the center, take exams on paper, and wait for weeks for results.
-*   **Disadvantages**: Time-consuming, wastage of paper, potential for human error in grading, difficult to manage large records.
-
-### 2.2 Proposed System
-The proposed system is an online portal where students can register and take exams from anywhere (or within the institute's lab).
-*   **Advantages**: Instant feedback, automated grading, historical record keeping, eco-friendly, and highly scalable.
 
 ### 2.3 Feasibility Study
 *   **Technical Feasibility**: The project uses Python (Flask) and MongoDB, which are robust and open-source technologies. The transition to a serverless architecture ensures high availability.
