@@ -33,8 +33,8 @@ class Config:
     SESSION_COOKIE_SAMESITE = 'Lax'
     
     # Exam settings
-    EXAM_DURATION_MINUTES = 100
-    TOTAL_QUESTIONS = 20
+    EXAM_DURATION_MINUTES = 60
+    TOTAL_QUESTIONS = 100
     PASSING_MARKS = 40
     
     # Pagination
