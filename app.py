@@ -402,7 +402,10 @@ def result_page(roll_number):
                     'percentage': exam['percentage'],
                     'grade': exam['grade'],
                     'exam_date': format_datetime(exam['submit_time']),
-                    'status': 'PASS' if exam['percentage'] >= app.config['PASSING_MARKS'] else 'FAIL'
+                    'status': 'PASS' if exam['percentage'] >= app.config['PASSING_MARKS'] else 'FAIL',
+                    'attempted': len(exam.get('answers', {})),
+                    'correct': int(exam['score']),
+                    'wrong': len(exam.get('answers', {})) - int(exam['score'])
                 })
         
         if not results:

@@ -301,6 +301,18 @@
                 <span class="detail-value">{{ "%.1f"|format(exam.score) }} / {{ exam.total }}</span>
             </div>
             <div class="detail-item">
+                <span class="detail-label">Attempted</span>
+                <span class="detail-value">{{ exam.attempted }} / {{ exam.total }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label" style="color: #34d399;">Correct</span>
+                <span class="detail-value" style="color: #34d399;">{{ exam.correct }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label" style="color: #f43f5e;">Wrong</span>
+                <span class="detail-value" style="color: #f43f5e;">{{ exam.wrong }}</span>
+            </div>
+            <div class="detail-item">
                 <span class="detail-label">Grade Awarded</span>
                 <span class="detail-value">{{ exam.grade }}</span>
             </div>
