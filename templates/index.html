@@ -284,7 +284,7 @@
             <h1 class="typing-text-institution" id="institution-text"></h1>
 
             <!-- Typing Effect for Developer Name -->
-            <p class="typing-text-dev">Made with <i class="fas fa-heart" style="color: #ff4757; margin: 0 5px;"></i> by
+            <p class="typing-text-dev">Made with <i class="fas fa-heart" style="color: #ff4757; margin: 0 5px;"></i>
                 <span id="dev-name-text"></span>
             </p>
 
@@ -326,7 +326,7 @@
     <script>
         // Typing Effect
         const institutionText = "OXFORD GROUP OF INSTITUTION";
-        const devNameText = "RAVI KUMAR";
+        const devNameText = " by RAVI KUMAR";
 
         async function typeText(elementId, text, speed = 60, delay = 0) {
             const element = document.getElementById(elementId);
@@ -363,7 +363,7 @@
 
             // Simulate loading for better UX
             setTimeout(() => {
-                window.location.href = '/exam/' + subject;
+                window.location.href = '/exam/' + encodeURIComponent(subject);
             }, 800);
         } else {
             // Shake animation or visual feedback for no selection
@@ -381,17 +381,17 @@
         const hamburger = document.getElementById('hamburger-btn');
         const sidebar = document.getElementById('sidebar');
         const closeBtn = document.getElementById('close-sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
 
         function toggleSidebar() {
             sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
             hamburger.classList.toggle('active');
         }
 
         if (hamburger) hamburger.addEventListener('click', toggleSidebar);
         if (closeBtn) closeBtn.addEventListener('click', toggleSidebar);
-        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
     </script>
 </body>
 

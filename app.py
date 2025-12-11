@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
+from urllib.parse import unquote
 import os
 
 from config import config
@@ -67,7 +68,16 @@ def before_request():
 @app.route('/')
 def index():
     """Landing page"""
+    # Default to all subjects (marketing view)
     subjects = Question.get_subjects()
+    
+    # If student is logged in, restrict to their registered subject
+    if 'student_roll' in session:
+        student = Student.get_by_roll(session['student_roll'])
+        if student and student.get('subject'):
+            # Only show the registered subject
+            subjects = [student['subject']]
+            
     return render_template('index.html', subjects=subjects)
 
 # ==================== STUDENT ROUTES ====================
@@ -194,12 +204,21 @@ def logout():
 def subjects_page():
     """Subjects selection page"""
     subjects = Question.get_subjects()
+    
+    # Restrict to registered subject if available
+    student_roll = session.get('student_roll')
+    if student_roll:
+        student = Student.get_by_roll(student_roll)
+        if student and student.get('subject'):
+            subjects = [student['subject']]
+            
     return render_template('subjects.html', subjects=subjects)
 
 @app.route('/exam/<subject>')
 @login_required
 def exam_page(subject):
     """Exam interface page"""
+    subject = unquote(subject)
     student_roll = session.get('student_roll')
     
     # Check if exam already exists for this subject
