@@ -4,17 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Oxford Group of Institution - Secure Online Exam Portal">
     <title>Oxford Group of Institution - Exam Portal</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap&font-display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --error-color: #ff4757;
+            --success-color: #00d2d3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -22,6 +32,20 @@
             color: #ffffff;
             font-family: 'Outfit', sans-serif;
             overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Screen reader only class */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
 
         /* Animated Background */
@@ -43,7 +67,6 @@
                 opacity: 0.5;
                 transform: scale(1);
             }
-
             100% {
                 opacity: 1;
                 transform: scale(1.1);
@@ -83,6 +106,21 @@
             color: rgba(255, 255, 255, 0.6);
             margin-bottom: 4rem;
             text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .heart-icon {
+            color: var(--error-color);
+            margin: 0 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
 
         .exam-card {
@@ -109,24 +147,34 @@
             font-size: 2rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            color: white;
         }
 
         .card-header p {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 2rem;
+            font-size: 1.05rem;
         }
 
         .controls-grid {
             display: grid;
             grid-template-columns: 1fr 1.5fr auto;
-            gap: 1rem;
+            gap: 1.5rem;
             align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        .subject-wrapper {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 100%;
         }
 
         .subject-select {
             width: 100%;
             padding: 1rem 1.5rem;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.25);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
             color: white;
@@ -142,14 +190,28 @@
         }
 
         .subject-select:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-            background-color: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.35);
+            background-color: rgba(0, 0, 0, 0.35);
         }
 
         .subject-select:focus {
             outline: none;
             border-color: #00C6FF;
-            box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.2);
+            box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.25);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            min-height: 1.2rem;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Modern Button Styles */
@@ -167,6 +229,9 @@
             gap: 0.5rem;
             cursor: pointer;
             text-decoration: none;
+            font-family: 'Outfit', sans-serif;
+            border: none;
+            font-size: 1rem;
         }
 
         .btn-Login {
@@ -177,38 +242,90 @@
 
         .btn-Login:hover {
             border-color: white;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
             transform: translateY(-2px);
+        }
+
+        .btn-Login:active {
+            transform: translateY(0);
         }
 
         .btn-Start {
             background: var(--primary-gradient);
-            border: none;
             color: white;
-            box-shadow: 0 0 20px rgba(0, 198, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.35);
         }
 
-        .btn-Start:hover {
+        .btn-Start:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 198, 255, 0.6);
+            box-shadow: 0 6px 20px rgba(0, 198, 255, 0.5);
         }
 
-        .btn-Start:active {
+        .btn-Start:active:not(:disabled) {
             transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 198, 255, 0.4);
+        }
+
+        .btn-Start:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-Start:focus-visible:not(:disabled) {
+            outline: 2px solid #00C6FF;
+            outline-offset: 2px;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .typing-text-institution {
-                font-size: 2rem;
+                font-size: 2.3rem;
+                line-height: 1.1;
+            }
+
+            .typing-text-dev {
+                font-size: 0.95rem;
+                letter-spacing: 2px;
+                margin-bottom: 2.5rem;
             }
 
             .controls-grid {
                 grid-template-columns: 1fr;
+                gap: 1.2rem;
             }
 
             .exam-card {
                 padding: 2rem;
+                margin: 0 1rem;
+            }
+
+            /* Native mobile picker for better UX */
+            .subject-select {
+                appearance: auto;
+                background-image: none;
+                padding: 1.1rem;
+            }
+
+            .subject-wrapper {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .typing-text-institution {
+                font-size: 1.9rem;
+            }
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            .btn-modern {
+                width: 100%;
+                justify-content: center;
+            }
+            .subject-wrapper {
+                grid-column: span 1;
             }
         }
 
@@ -216,7 +333,7 @@
         #loading-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.92);
             backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
@@ -234,18 +351,38 @@
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
+            width: 56px;
+            height: 56px;
+            border: 4px solid rgba(255, 255, 255, 0.15);
             border-radius: 50%;
             border-top-color: #00C6FF;
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 1rem;
+            animation: spin 0.9s linear infinite;
+            margin-bottom: 1.2rem;
         }
 
         @keyframes spin {
             to {
                 transform: rotate(360deg);
+            }
+        }
+
+        /* Focus visible for accessibility */
+        .btn-modern:focus-visible, 
+        .subject-select:focus-visible {
+            outline: 2px solid #00C6FF;
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .spinner {
+                animation: none;
             }
         }
     </style>
@@ -256,142 +393,209 @@
 
     <!-- Sidebar Navigation -->
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
-    <nav class="sidebar" id="sidebar">
+    <nav class="sidebar" id="sidebar" aria-label="Main Navigation">
         <div class="sidebar-header">
             <h3>Menu</h3>
-            <button class="close-btn" id="close-sidebar">&times;</button>
+            <button class="close-btn" id="close-sidebar" aria-label="Close menu">&times;</button>
         </div>
         <ul class="sidebar-nav">
-            <li><a href="/" class="nav-link active"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="/register" class="nav-link"><i class="fas fa-user-plus"></i> Register</a></li>
-            <li><a href="/login" class="nav-link"><i class="fas fa-sign-in-alt"></i> Student Login</a></li>
-            <li><a href="/admin/login" class="nav-link"><i class="fas fa-user-shield"></i> Admin</a></li>
-            <li><a href="/portfolio" class="nav-link"><i class="fas fa-id-card"></i> Developer Profile</a></li>
+            <li><a href="/" class="nav-link active" aria-current="page"><i class="fas fa-home" aria-hidden="true"></i> Home</a></li>
+            <li><a href="/register" class="nav-link"><i class="fas fa-user-plus" aria-hidden="true"></i> Register</a></li>
+            <li><a href="/login" class="nav-link"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Student Login</a></li>
+            <li><a href="/admin/login" class="nav-link"><i class="fas fa-user-shield" aria-hidden="true"></i> Admin</a></li>
+            <li><a href="/portfolio" class="nav-link"><i class="fas fa-id-card" aria-hidden="true"></i> Developer Profile</a></li>
         </ul>
     </nav>
 
     <!-- Hamburger Menu -->
-    <div class="hamburger-menu" id="hamburger-btn">
+    <button class="hamburger-menu" id="hamburger-btn" aria-label="Open main menu" aria-expanded="false">
         <div class="bar"></div>
         <div class="bar"></div>
         <div class="bar"></div>
-    </div>
+    </button>
 
     <!-- Main Content -->
-    <section class="hero-section">
+    <main class="hero-section" role="main">
         <div class="hero-content text-center">
             <!-- Typing Effect for Institution Name -->
-            <h1 class="typing-text-institution" id="institution-text"></h1>
+            <h1 class="typing-text-institution" id="institution-text" aria-live="polite"></h1>
 
             <!-- Typing Effect for Developer Name -->
-            <p class="typing-text-dev">Made with <i class="fas fa-heart" style="color: #ff4757; margin: 0 5px;"></i>
-                <span id="dev-name-text"></span>
+            <p class="typing-text-dev">
+                <i class="fas fa-heart heart-icon" aria-hidden="true"></i>
+                <span id="dev-name-text" aria-live="polite"></span>
             </p>
 
             <!-- Exam Card -->
-            <div class="exam-card">
+            <div class="exam-card" role="region" aria-labelledby="exam-card-header">
                 <div class="card-header">
-                    <h2>Start Your Journey</h2>
+                    <h2 id="exam-card-header">Start Your Journey</h2>
                     <p>Select your subject to begin the assessment</p>
                 </div>
 
                 <div class="controls-grid">
-                    <a href="{{ url_for('login_page') }}" class="btn-modern btn-Login">
-                        <i class="fas fa-user-graduate"></i> Student Login
+                    <a href="{{ url_for('login_page') }}" class="btn-modern btn-Login" aria-label="Student Login">
+                        <i class="fas fa-user-graduate" aria-hidden="true"></i> Student Login
                     </a>
 
                     <div class="subject-wrapper">
-                        <select id="subject-select" class="subject-select">
+                        <label for="subject-select" class="sr-only">Select Subject</label>
+                        <select id="subject-select" class="subject-select" aria-label="Select Subject">
                             <option value="">Select Subject...</option>
                             {% for subject in subjects %}
-                            <option value="{{ subject }}">{{ subject }}</option>
+                            <option value="{{ subject|e }}">{{ subject|e }}</option>
                             {% endfor %}
                         </select>
+                        <p id="subject-error" class="error-message" role="alert">
+                            <i class="fas fa-exclamation-circle" aria-hidden="true"></i> Please select a subject
+                        </p>
                     </div>
 
-                    <button id="start-exam-btn" class="btn-modern btn-Start">
-                        Start Exam <i class="fas fa-arrow-right"></i>
+                    <button id="start-exam-btn" class="btn-modern btn-Start" aria-label="Start Exam">
+                        Start Exam <i class="fas fa-arrow-right" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-        <p style="letter-spacing: 1px; font-weight: 500;">Initializing Environment...</p>
+    <div id="loading-overlay" aria-live="assertive" aria-busy="true">
+        <div class="spinner" role="status" aria-label="Loading"></div>
+        <p id="loading-text" style="letter-spacing: 1px; font-weight: 500; font-size: 1.1rem;">Initializing Environment...</p>
     </div>
 
     <script>
-        // Typing Effect
+        // Typing Effect with accessibility
         const institutionText = "OXFORD GROUP OF INSTITUTION";
-        const devNameText = " by RAVI KUMAR";
+        const devNameText = "Developed by Ravi Kumar"; // Professional text
 
         async function typeText(elementId, text, speed = 60, delay = 0) {
             const element = document.getElementById(elementId);
-            element.innerHTML = ''; // Ensure clear start
+            if (!element) return;
+            
+            element.innerHTML = '';
             await new Promise(r => setTimeout(r, delay));
-
+            
             for (let i = 0; i < text.length; i++) {
                 element.innerHTML += text.charAt(i);
                 await new Promise(resolve => setTimeout(resolve, speed));
             }
         }
 
-        window.onload = async function () {
+        // Initialize typing effects
+        document.addEventListener('DOMContentLoaded', async () => {
             await typeText('institution-text', institutionText, 50, 200);
             await typeText('dev-name-text', devNameText, 80, 500);
-        };
-
-        // Exam Start Logic
-        document.getElementById('start-exam-btn').addEventListener('click', function () {
-            // Check login status
-            const isLoggedIn = {{ 'true' if session.get('student_roll') else 'false'
-        }};
-
-        if (!isLoggedIn) {
-            window.location.href = "{{ url_for('login_page') }}";
-            return;
-        }
-
-        const subject = document.getElementById('subject-select').value;
-        const overlay = document.getElementById('loading-overlay');
-
-        if (subject) {
-            overlay.classList.add('visible');
-
-            // Simulate loading for better UX
-            setTimeout(() => {
-                window.location.href = '/exam/' + encodeURIComponent(subject);
-            }, 800);
-        } else {
-            // Shake animation or visual feedback for no selection
-            const select = document.getElementById('subject-select');
-            select.style.borderColor = '#ff4757';
-            select.style.boxShadow = '0 0 0 3px rgba(255, 71, 87, 0.2)';
-            setTimeout(() => {
-                select.style.borderColor = '';
-                select.style.boxShadow = '';
-            }, 2000);
-        }
+            
+            // Initialize form validation
+            initExamForm();
         });
 
-        // Sidebar Logic (Reuse existing if available in main.js, else inline here for reliability)
-        const hamburger = document.getElementById('hamburger-btn');
-        const sidebar = document.getElementById('sidebar');
-        const closeBtn = document.getElementById('close-sidebar');
-        const sidebarOverlay = document.getElementById('sidebar-overlay');
-
-        function toggleSidebar() {
-            sidebar.classList.toggle('active');
-            sidebarOverlay.classList.toggle('active');
-            hamburger.classList.toggle('active');
+        // Exam Form Logic with full validation
+        function initExamForm() {
+            const startBtn = document.getElementById('start-exam-btn');
+            const subjectSelect = document.getElementById('subject-select');
+            const errorElement = document.getElementById('subject-error');
+            const loadingText = document.getElementById('loading-text');
+            const overlay = document.getElementById('loading-overlay');
+            
+            // Disable button initially
+            startBtn.disabled = true;
+            
+            // Validate on subject change
+            subjectSelect.addEventListener('change', () => {
+                if (subjectSelect.value) {
+                    startBtn.disabled = false;
+                    hideError();
+                } else {
+                    startBtn.disabled = true;
+                    hideError();
+                }
+            });
+            
+            // Start exam handler
+            startBtn.addEventListener('click', () => {
+                // Check login status (server-side rendered)
+                const isLoggedIn = {{ 'true' if session.get('student_roll') else 'false' }};
+                
+                if (!isLoggedIn) {
+                    window.location.href = "{{ url_for('login_page') }}";
+                    return;
+                }
+                
+                const subject = subjectSelect.value.trim();
+                
+                if (!subject) {
+                    showError();
+                    subjectSelect.focus();
+                    return;
+                }
+                
+                // Update loading message with subject name
+                loadingText.textContent = `Loading ${subject} exam environment...`;
+                overlay.classList.add('visible');
+                
+                // Redirect after simulated load
+                setTimeout(() => {
+                    window.location.href = '/exam/' + encodeURIComponent(subject);
+                }, 800);
+            });
+            
+            // Helper functions
+            function showError() {
+                errorElement.style.display = 'block';
+                subjectSelect.style.borderColor = 'var(--error-color)';
+                subjectSelect.style.boxShadow = '0 0 0 3px rgba(255, 71, 87, 0.2)';
+                
+                // Auto-hide after 3 seconds
+                setTimeout(hideError, 3000);
+            }
+            
+            function hideError() {
+                errorElement.style.display = 'none';
+                subjectSelect.style.borderColor = '';
+                subjectSelect.style.boxShadow = '';
+            }
         }
 
-        if (hamburger) hamburger.addEventListener('click', toggleSidebar);
-        if (closeBtn) closeBtn.addEventListener('click', toggleSidebar);
-        if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
+        // Sidebar Toggle with ARIA
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger-btn');
+            const sidebar = document.getElementById('sidebar');
+            const closeBtn = document.getElementById('close-sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            
+            if (!hamburger || !sidebar || !closeBtn || !sidebarOverlay) return;
+            
+            const toggleSidebar = () => {
+                const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
+                const newState = !isExpanded;
+                
+                hamburger.setAttribute('aria-expanded', newState);
+                sidebar.classList.toggle('active', newState);
+                sidebarOverlay.classList.toggle('active', newState);
+                hamburger.classList.toggle('active', newState);
+                
+                // Trap focus in sidebar when open (basic implementation)
+                if (newState) {
+                    const firstLink = sidebar.querySelector('a');
+                    if (firstLink) firstLink.focus();
+                }
+            };
+            
+            hamburger.addEventListener('click', toggleSidebar);
+            closeBtn.addEventListener('click', toggleSidebar);
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+            
+            // Close sidebar on ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                    toggleSidebar();
+                    hamburger.focus();
+                }
+            });
+        });
     </script>
 </body>
 
