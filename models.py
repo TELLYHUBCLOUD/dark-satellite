@@ -174,11 +174,6 @@ class Question:
         result = db.questions.insert_one(question)
         return result.inserted_id
     
-    @staticmethod
-    def get_all():
-        """Get all questions"""
-        db = db_manager.get_db()
-        return list(db.questions.find())
 
     @staticmethod
     def get_by_ids(question_ids):
