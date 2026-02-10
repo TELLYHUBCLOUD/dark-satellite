@@ -179,6 +179,19 @@ class Question:
         """Get all questions"""
         db = db_manager.get_db()
         return list(db.questions.find())
+
+    @staticmethod
+    def get_by_ids(question_ids):
+        """Get questions by a list of IDs"""
+        db = db_manager.get_db()
+        # Ensure IDs are ObjectIds
+        oids = []
+        for qid in question_ids:
+            if isinstance(qid, str) and ObjectId.is_valid(qid):
+                oids.append(ObjectId(qid))
+            elif isinstance(qid, ObjectId):
+                oids.append(qid)
+        return list(db.questions.find({'_id': {'$in': oids}}))
     
     @staticmethod
     def get_random(count=100):

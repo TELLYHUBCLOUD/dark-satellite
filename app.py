@@ -254,7 +254,7 @@ def start_exam(subject):
                 }), 403
             
             # Return existing exam
-            questions = Question.get_all()
+            questions = Question.get_by_ids(existing_exam['questions'])
             question_map = {str(q['_id']): q for q in questions}
             
             exam_questions = []
@@ -348,7 +348,7 @@ def submit_exam():
             return jsonify({'success': False, 'message': 'Exam already submitted'}), 400
         
         # Get all questions
-        questions = Question.get_all()
+        questions = Question.get_by_ids(exam['questions'])
         question_map = {str(q['_id']): q for q in questions}
         
         # Get exam questions
