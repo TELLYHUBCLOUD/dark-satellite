@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authentication - Dark Satellite</title>
+    <title>Authentication - Project Ravi Kumar</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -17,13 +17,7 @@
             background: var(--bg-deep);
             margin: 0;
         }
-        .auth-container {
-            width: 850px;
-            min-height: 650px;
-            display: flex;
-            position: relative;
-            overflow: hidden;
-        }
+
         .auth-side {
             flex: 1;
             padding: 60px;
@@ -32,6 +26,7 @@
             justify-content: center;
             z-index: 2;
         }
+
         .auth-overlay {
             position: absolute;
             top: 0;
@@ -49,9 +44,11 @@
             text-align: center;
             padding: 40px;
         }
+
         .auth-container.right-panel-active .auth-overlay {
             transform: translateX(-100%);
         }
+
         .auth-form-side {
             width: 50%;
             height: 100%;
@@ -64,24 +61,29 @@
             flex-direction: column;
             justify-content: center;
         }
+
         .login-side {
             left: 0;
             z-index: 5;
         }
+
         .register-side {
             left: 0;
             opacity: 0;
             z-index: 1;
         }
+
         .auth-container.right-panel-active .login-side {
             transform: translateX(100%);
             opacity: 0;
         }
+
         .auth-container.right-panel-active .register-side {
             transform: translateX(100%);
             opacity: 1;
             z-index: 6;
         }
+
         .alert-msg {
             font-size: 0.9rem;
             margin-top: 15px;
@@ -93,8 +95,9 @@
 <body>
     <div class="bg-stellar"></div>
 
-    <div class="glass-panel auth-container {{ 'right-panel-active' if active_panel == 'register' else '' }}" id="container">
-        
+    <div class="glass-panel auth-container {{ 'right-panel-active' if active_panel == 'register' else '' }}"
+        id="container">
+
         <!-- Login Side -->
         <div class="auth-form-side login-side">
             <form id="loginForm">
@@ -142,7 +145,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <input type="password" id="reg-password" class="form-input" placeholder="Password" required minlength="6">
+                    <input type="password" id="reg-password" class="form-input" placeholder="Password" required
+                        minlength="6">
                 </div>
                 <button type="submit" class="btn btn-secondary" style="width: 100%;">Initialize Identity</button>
                 <div id="reg-alert" class="alert-msg"></div>
@@ -153,12 +157,14 @@
         <div class="auth-overlay">
             <div id="overlay-login-content">
                 <h1>Hello, Candidate!</h1>
-                <p style="margin: 20px 0 30px; opacity: 0.9;">Start your futuristic assessment journey by creating an account.</p>
+                <p style="margin: 20px 0 30px; opacity: 0.9;">Start your futuristic assessment journey by creating an
+                    account.</p>
                 <button class="btn btn-outline" id="signUp" style="border-color: white; color: white;">Sign Up</button>
             </div>
             <div id="overlay-register-content" style="display: none;">
                 <h1>Welcome Back!</h1>
-                <p style="margin: 20px 0 30px; opacity: 0.9;">Please log in with your credentials to access your dashboard.</p>
+                <p style="margin: 20px 0 30px; opacity: 0.9;">Please log in with your credentials to access your
+                    dashboard.</p>
                 <button class="btn btn-outline" id="signIn" style="border-color: white; color: white;">Sign In</button>
             </div>
         </div>
@@ -232,7 +238,7 @@
             const dob = document.getElementById('login-dob').value;
 
             try {
-                const res = await fetch('/api/login', {
+                const res = await fetch('/admin/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ roll_number, password, dob })

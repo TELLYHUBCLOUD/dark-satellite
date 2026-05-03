@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard - Dark Satellite</title>
+    <title>Student Dashboard - Project Ravi Kumar</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -46,9 +46,10 @@
 
     <nav class="navbar">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <a href="/" class="navbar-brand text-gradient">DARK SATELLITE</a>
+            <a href="/" class="navbar-brand text-gradient">PROJECT RAVI KUMAR</a>
             <div style="display: flex; align-items: center; gap: 20px;">
-                <span style="color: var(--text-dim);">Welcome, {{ student.name }}</span>
+                <a href="/portfolio" class="nav-link" style="margin-right: 15px;">Portfolio</a>
+                <span style="color: var(--text-dim); margin-right: 15px;">Welcome, {{ student.name }}</span>
                 <a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm">Logout</a>
             </div>
         </div>
@@ -91,7 +92,7 @@
                 <h3 style="margin-bottom: 20px;"><i class="fas fa-play-circle" style="margin-right: 10px; color: var(--primary);"></i> Ongoing & Available <span class="text-gradient">Tests</span></h3>
                 <div style="display: flex; flex-direction: column; gap: 15px;">
                     {% for subject in available_subjects %}
-                    <div class="glass-panel" style="padding: 25px; display: flex; justify-content: space-between; align-items: center;">
+                    <div class="glass-panel hoverable" style="padding: 25px; display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; align-items: center; gap: 20px;">
                             <div style="width: 50px; height: 50px; border-radius: 12px; background: rgba(0, 210, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);">
                                 <i class="fas fa-laptop-code fa-lg"></i>
@@ -137,8 +138,11 @@
     </main>
 
     <footer style="padding: 40px 0; text-align: center; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border-glass); margin-top: 60px;">
-        &copy; 2024 Dark Satellite. Precision Online Assessments.
+        &copy; 2026 Project Ravi Kumar. Precision Online Assessments.
     </footer>
+    <a href="/portfolio" class="floating-portfolio" title="Developer Portfolio">
+        <i class="fas fa-user-code"></i>
+    </a>
 </body>
 
 </html>

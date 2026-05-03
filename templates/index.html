@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Smart Online Examination Portal - Secure, Reliable, and Futuristic">
-    <title>Smart Online Exam Portal - Dark Satellite</title>
+    <title>Smart Online Exam Portal - Project Ravi Kumar</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,25 +19,30 @@
             gap: 25px;
             margin-top: 60px;
         }
+
         .feature-card {
             padding: 35px;
             text-align: center;
         }
+
         .feature-icon {
             font-size: 2.5rem;
             margin-bottom: 20px;
             color: var(--primary);
         }
+
         .hero-title {
             font-size: 4.5rem;
             line-height: 1.1;
             margin-bottom: 20px;
         }
+
         .trust-section {
             padding: 100px 0;
             border-top: 1px solid var(--border-glass);
             margin-top: 100px;
         }
+
         .testimonial-card {
             padding: 30px;
             margin-top: 40px;
@@ -50,63 +55,76 @@
 
     <nav class="navbar">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <a href="/" class="navbar-brand text-gradient">DARK SATELLITE</a>
-            <div style="display: flex; gap: 20px;">
-                <a href="/login" class="nav-link">Student Login</a>
-                <a href="/admin/login" class="nav-link">Admin</a>
+            <a href="/" class="navbar-brand text-gradient" style="font-size: 2rem;">PROJECT RAVI KUMAR</a>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <a href="/portfolio" class="btn btn-outline btn-xs">Portfolio</a>
+                <a href="/login" class="btn btn-outline btn-xs">Student Login</a>
+                <a href="/admin/login" class="btn btn-outline btn-xs">Admin Access</a>
             </div>
         </div>
     </nav>
 
     <main class="container">
         <!-- Hero Section -->
-        <section style="min-height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 0;">
-            <h1 class="hero-title animate-slide-up">Smart Online <span class="text-gradient">Examination Portal</span></h1>
-            <p style="font-size: 1.25rem; color: var(--text-dim); max-width: 700px; margin-bottom: 40px;" class="animate-slide-up">
-                Experience the future of assessments with our secure, immersive, and high-tech examination environment. Designed for excellence and high-performance.
+        <section
+            style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 0;">
+            <h1 class="hero-title animate-slide-up">OXFORD COMPUTER EDUCATION'S </h1>
+            <h2 class="hero-title animate-slide-up"><span class="text-gradient">Online Examination Portal </span></h2>
+            <p style="font-size: 1.25rem; color: var(--text-dim); max-width: 700px; margin-bottom: 40px;"
+                class="animate-slide-up">
+                Experience the future of assessments with our secure, immersive, and high-tech examination environment.
+                Designed for excellence and high-performance.
             </p>
             <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;" class="animate-slide-up">
                 <a href="{{ url_for('login_page') }}" class="btn btn-primary btn-glow">Start Your Exam</a>
                 <a href="/register" class="btn btn-outline">Student Signup</a>
             </div>
+            <!-- NICHE KARNA HI HAI ISLIYE LIKHA HU BHAI -->
 
             <!-- Feature Cards -->
-            <div class="feature-grid animate-slide-up" style="animation-delay: 0.2s;">
-                <div class="glass-panel feature-card">
+            <div class="stats-grid animate-slide-up" style="animation-delay: 0.2s; margin-top: 80px;">
+                <div class="glass-panel feature-card hoverable">
                     <i class="fas fa-shield-alt feature-icon"></i>
                     <h3>Secure Exam</h3>
-                    <p style="color: var(--text-dim); margin-top: 10px;">Advanced proctoring and secure environment to ensure integrity.</p>
+                    <p style="color: var(--text-dim); margin-top: 10px;">Advanced proctoring and secure environment to
+                        ensure integrity.</p>
                 </div>
-                <div class="glass-panel feature-card">
+                <div class="glass-panel feature-card hoverable">
                     <i class="fas fa-clock feature-icon"></i>
                     <h3>Precision Timer</h3>
-                    <p style="color: var(--text-dim); margin-top: 10px;">Highly accurate countdown with auto-submit functionality.</p>
+                    <p style="color: var(--text-dim); margin-top: 10px;">Highly accurate countdown with auto-submit
+                        functionality.</p>
                 </div>
-                <div class="glass-panel feature-card">
+                <div class="glass-panel feature-card hoverable">
                     <i class="fas fa-bolt feature-icon"></i>
                     <h3>Instant Results</h3>
-                    <p style="color: var(--text-dim); margin-top: 10px;">Detailed performance analytics available immediately after submission.</p>
+                    <p style="color: var(--text-dim); margin-top: 10px;">Detailed performance analytics available
+                        immediately after submission.</p>
                 </div>
-                <div class="glass-panel feature-card">
+                <div class="glass-panel feature-card hoverable">
                     <i class="fas fa-mobile-alt feature-icon"></i>
                     <h3>Responsive Design</h3>
-                    <p style="color: var(--text-dim); margin-top: 10px;">Seamless experience across desktop, tablet, and mobile devices.</p>
+                    <p style="color: var(--text-dim); margin-top: 10px;">Seamless experience across desktop, tablet, and
+                        mobile devices.</p>
                 </div>
             </div>
         </section>
 
         <!-- Upcoming Exams Section -->
         <section style="padding: 80px 0;">
-            <h2 class="text-center" style="margin-bottom: 50px;">Available <span class="text-gradient">Assessments</span></h2>
+            <h2 class="text-center" style="margin-bottom: 50px;">Available <span
+                    class="text-gradient">Assessments</span></h2>
             <div class="glass-panel" style="padding: 40px;">
                 <div style="display: flex; flex-direction: column; gap: 20px;">
                     {% for subject in subjects %}
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--border-glass);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--border-glass);">
                         <div>
                             <h4 style="margin: 0;">{{ subject }} Certification Exam</h4>
                             <p style="color: var(--text-muted); font-size: 0.9rem;">Duration: 30 Mins | 25 Questions</p>
                         </div>
-                        <a href="{{ url_for('exam_details_page', subject=subject) }}" class="btn btn-outline btn-sm">Join Now</a>
+                        <a href="{{ url_for('exam_details_page', subject=subject) }}"
+                            class="btn btn-outline btn-sm">Join Now</a>
                     </div>
                     {% endfor %}
                 </div>
@@ -118,19 +136,24 @@
             <h2 class="text-center">Trusted by <span class="text-gradient">Global Students</span></h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
                 <div class="glass-panel testimonial-card">
-                    <p style="font-style: italic; color: var(--text-bright);">"The most immersive exam portal I've ever used. The dark theme is so easy on the eyes!"</p>
+                    <p style="font-style: italic; color: var(--text-bright);">"The most immersive exam portal I've ever
+                        used. The dark theme is so easy on the eyes!"</p>
                     <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--grad-stellar);"></div>
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--grad-stellar);">
+                        </div>
                         <div>
                             <h5 style="margin: 0;">Alex Johnson</h5>
-                            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Computer Science Student</p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Computer Science Student
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="glass-panel testimonial-card">
-                    <p style="font-style: italic; color: var(--text-bright);">"The analytics after the exam helped me identify my weak spots instantly. Highly recommended!"</p>
+                    <p style="font-style: italic; color: var(--text-bright);">"The analytics after the exam helped me
+                        identify my weak spots instantly. Highly recommended!"</p>
                     <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--grad-nebula);"></div>
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--grad-nebula);">
+                        </div>
                         <div>
                             <h5 style="margin: 0;">Sarah Williams</h5>
                             <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">UI/UX Designer</p>
@@ -142,25 +165,60 @@
     </main>
 
     <footer style="padding: 60px 0; border-top: 1px solid var(--border-glass); margin-top: 80px; text-align: center;">
-        <p style="color: var(--text-muted);">&copy; 2024 Dark Satellite. All Rights Reserved.</p>
+        <p style="color: var(--text-muted);">&copy; 2026 Project Ravi Kumar. All Rights Reserved.</p>
     </footer>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" style="position: fixed; inset: 0; background: var(--bg-deep); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;">
-        <div style="width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    <div id="loading-overlay"
+        style="position: fixed; inset: 0; background: var(--bg-deep); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;">
+        <div
+            style="width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;">
+        </div>
         <p style="margin-top: 20px; color: var(--text-bright);">Initializing Environment...</p>
     </div>
 
     <style>
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         .animate-slide-up {
             animation: slideUp 0.8s ease-out both;
         }
+
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
+    <a href="/portfolio" class="floating-portfolio" title="Developer Portfolio">
+        <i class="fas fa-user-code"></i>
+    </a>
+
+    <button class="scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="scrollTopBtn"
+        style="display: none;">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        window.onscroll = function () {
+            const btn = document.getElementById('scrollTopBtn');
+            if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+                btn.style.display = 'flex';
+            } else {
+                btn.style.display = 'none';
+            }
+        };
+    </script>
 </body>
 
 </html>
