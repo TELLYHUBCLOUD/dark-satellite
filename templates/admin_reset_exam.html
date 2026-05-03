@@ -4,62 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Exam - Admin Portal</title>
+    <title>Reset Assessment - Dark Satellite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+        .admin-sidebar { background: var(--bg-surface); border-right: 1px solid var(--border-glass); padding: 30px; }
+        .admin-main { padding: 40px; }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="container navbar-content">
-            <div class="navbar-brand">🎓 Admin Portal</div>
-            <ul class="navbar-nav">
-                <li><a href="/admin/dashboard" class="nav-link">Dashboard</a></li>
-                <li><a href="/admin/logout" class="nav-link">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
+    <div class="bg-stellar"></div>
 
-    <section class="section">
-        <div class="container" style="max-width: 600px;">
-            <div class="glass-card">
-                <h2 class="text-center" style="margin-bottom: 2rem;">Reset Student Exam</h2>
-                <p class="text-center" style="color: var(--text-muted); margin-bottom: 2rem;">
-                    Allow a student to retake an exam for a specific subject.
-                </p>
-
-                <form id="resetExamForm">
-                    <div class="form-group">
-                        <label for="resetRoll" class="form-label">Student Roll Number</label>
-                        <input type="text" id="resetRoll" name="student_roll" class="form-input" required
-                            placeholder="e.g. OL20250001">
-                    </div>
-                    <div class="form-group">
-                        <label for="resetSubject" class="form-label">Subject</label>
-                        <select id="resetSubject" name="subject" class="form-input" required>
-                            <option value="" disabled selected>Select Subject</option>
-                            <option value="Python">Python</option>
-                            <option value="Web Design">Web Design</option>
-                            <option value="IoT">IoT</option>
-                            <option value="Computer Fundamentals">Computer Fundamentals</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-danger" style="width: 100%;">Reset Exam</button>
-                </form>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div style="margin-bottom: 50px;">
+                <h2 class="text-gradient" style="font-size: 1.5rem;">SATELLITE <span style="color: white;">OS</span></h2>
             </div>
-        </div>
-    </section>
+            <nav style="display: flex; flex-direction: column; gap: 10px;">
+                <a href="/admin/dashboard" class="btn btn-outline" style="justify-content: flex-start; border: none;"><i class="fas fa-th-large"></i> Dashboard</a>
+                <a href="/admin/add_question" class="btn btn-outline" style="justify-content: flex-start; border: none;"><i class="fas fa-plus-circle"></i> Add Questions</a>
+                <a href="/admin/reset_exam" class="btn btn-outline" style="justify-content: flex-start; border: none; background: rgba(0, 210, 255, 0.1); color: var(--primary);"><i class="fas fa-undo"></i> Reset Exam</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div style="max-width: 600px; margin: 0 auto;">
+                <h1 style="margin-bottom: 30px;">Reset <span class="text-gradient">Session</span></h1>
+                
+                <div class="glass-panel" style="padding: 40px;">
+                    <p style="color: var(--text-dim); margin-bottom: 30px;">Authorize a candidate to re-initialize an assessment session.</p>
+
+                    <form id="resetExamForm">
+                        <div class="form-group">
+                            <label style="font-size: 0.8rem; color: var(--text-muted);">Candidate Roll Number</label>
+                            <input type="text" id="resetRoll" class="form-input" required placeholder="e.g. OL20250001">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size: 0.8rem; color: var(--text-muted);">Domain / Subject</label>
+                            <select id="resetSubject" class="form-input" required style="background: var(--bg-surface);">
+                                <option value="" disabled selected>Select Subject</option>
+                                <option value="Python">Python</option>
+                                <option value="Web Design">Web Design</option>
+                                <option value="IoT">IoT</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-secondary btn-glow" style="width: 100%; margin-top: 20px;">Execute Reset Sequence</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <script>
         document.getElementById('resetExamForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-
             const student_roll = document.getElementById('resetRoll').value;
             const subject = document.getElementById('resetSubject').value;
-
-            if (!confirm(`Are you sure you want to reset the ${subject} exam for student ${student_roll}?`)) {
-                return;
-            }
+            if (!confirm(`Confirm reset for candidate ${student_roll}?`)) return;
 
             try {
                 const response = await fetch('/api/admin/reset_exam', {
@@ -67,18 +71,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ student_roll, subject })
                 });
-
                 const data = await response.json();
-
                 if (data.success) {
-                    alert('Exam reset successfully!');
-                    document.getElementById('resetExamForm').reset();
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            } catch (error) {
-                alert('Failed to reset exam. Please try again.');
-            }
+                    alert('Session reset successfully.');
+                    e.target.reset();
+                } else { alert('Error: ' + data.message); }
+            } catch (error) { alert('Request failed.'); }
         });
     </script>
 </body>

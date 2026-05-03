@@ -4,395 +4,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authentication - O Level Exam Portal</title>
+    <title>Authentication - Dark Satellite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Auth Specific Overrides */
         body {
-            font-family: 'Outfit', sans-serif;
-            background: #0f172a;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            height: 100vh;
+            min-height: 100vh;
+            background: var(--bg-deep);
             margin: 0;
-            overflow: hidden;
         }
-
         .auth-container {
-            background-color: var(--bg-card);
-            border-radius: 20px;
-            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+            width: 850px;
+            min-height: 650px;
+            display: flex;
             position: relative;
             overflow: hidden;
-            width: 768px;
-            max-width: 100%;
-            min-height: 600px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            animation: fadeIn 0.8s ease-out;
         }
-
-        .form-container {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            transition: all 0.6s ease-in-out;
-        }
-
-        .sign-in-container {
-            left: 0;
-            width: 50%;
+        .auth-side {
+            flex: 1;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             z-index: 2;
         }
-
-        .auth-container.right-panel-active .sign-in-container {
-            transform: translateX(100%);
-        }
-
-        .sign-up-container {
-            left: 0;
-            width: 50%;
-            opacity: 0;
-            z-index: 1;
-        }
-
-        .auth-container.right-panel-active .sign-up-container {
-            transform: translateX(100%);
-            opacity: 1;
-            z-index: 5;
-            animation: show 0.6s;
-        }
-
-        @keyframes show {
-
-            0%,
-            49.99% {
-                opacity: 0;
-                z-index: 1;
-            }
-
-            50%,
-            100% {
-                opacity: 1;
-                z-index: 5;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .overlay-container {
+        .auth-overlay {
             position: absolute;
             top: 0;
             left: 50%;
             width: 50%;
             height: 100%;
-            overflow: hidden;
-            transition: transform 0.6s ease-in-out;
-            z-index: 100;
+            background: var(--grad-stellar);
+            z-index: 10;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 40px;
         }
-
-        .auth-container.right-panel-active .overlay-container {
+        .auth-container.right-panel-active .auth-overlay {
             transform: translateX(-100%);
         }
-
-        .overlay {
-            background: var(--primary-gradient, linear-gradient(135deg, #00C6FF 0%, #0072FF 100%));
-            background: -webkit-linear-gradient(to right, #00C6FF, #0072FF);
-            background: linear-gradient(to right, #00C6FF, #0072FF);
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: 0 0;
-            color: #FFFFFF;
-            position: relative;
-            left: -100%;
-            height: 100%;
-            width: 200%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-        }
-
-        .auth-container.right-panel-active .overlay {
-            transform: translateX(50%);
-        }
-
-        .overlay-panel {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 40px;
-            text-align: center;
-            top: 0;
-            height: 100%;
+        .auth-form-side {
             width: 50%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-        }
-
-        .overlay-left {
-            transform: translateX(-20%);
-        }
-
-        .auth-container.right-panel-active .overlay-left {
-            transform: translateX(0);
-        }
-
-        .overlay-right {
-            right: 0;
-            transform: translateX(0);
-        }
-
-        .auth-container.right-panel-active .overlay-right {
-            transform: translateX(20%);
-        }
-
-        form {
-            background-color: var(--bg-card);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 50px;
             height: 100%;
-            text-align: center;
-            color: white;
-        }
-
-        h1 {
-            font-weight: bold;
-            margin: 0;
-            margin-bottom: 1rem;
-        }
-
-        p {
-            font-size: 14px;
-            font-weight: 100;
-            line-height: 20px;
-            letter-spacing: 0.5px;
-            margin: 20px 0 30px;
-        }
-
-        span {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 10px;
-        }
-
-        a {
-            color: white;
-            font-size: 14px;
-            text-decoration: none;
-            margin: 15px 0;
-            transition: color 0.3s;
-        }
-
-        a:hover {
-            color: var(--primary-light);
-        }
-
-        button {
-            border-radius: 20px;
-            border: 1px solid #FFFFFF;
-            background-color: transparent;
-            color: #FFFFFF;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 12px 45px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: transform 80ms ease-in, background-color 0.3s;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        button:focus {
-            outline: none;
-        }
-
-        button.ghost {
-            background-color: transparent;
-            border-color: #FFFFFF;
-        }
-
-        button.ghost:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        button[type="submit"] {
-            background: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
-            border: none;
-            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.4);
-        }
-
-        button[type="submit"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 198, 255, 0.6);
-        }
-
-        input,
-        select {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 15px;
-            margin: 8px 0;
-            width: 100%;
-            color: white;
-            border-radius: 5px;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #00C6FF;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        select option {
-            background-color: #1e293b;
-            color: white;
-        }
-
-        /* Particle Background */
-        #particles-js {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-image: url("");
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: 50% 50%;
+            top: 0;
+            transition: all 0.6s ease-in-out;
+            background: var(--bg-surface);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-
+        .login-side {
+            left: 0;
+            z-index: 5;
+        }
+        .register-side {
+            left: 0;
+            opacity: 0;
+            z-index: 1;
+        }
+        .auth-container.right-panel-active .login-side {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        .auth-container.right-panel-active .register-side {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 6;
+        }
         .alert-msg {
-            margin-top: 10px;
             font-size: 0.9rem;
-            min-height: 20px;
-        }
-
-        .alert-msg.success {
-            color: #4ade80;
-        }
-
-        .alert-msg.error {
-            color: #f87171;
-        }
-
-        .alert-msg.info {
-            color: #60a5fa;
+            margin-top: 15px;
+            height: 20px;
         }
     </style>
 </head>
 
 <body>
-    <div id="particles-js"></div>
+    <div class="bg-stellar"></div>
 
-    <div class="auth-container {{ 'right-panel-active' if active_panel == 'register' else '' }}" id="container">
-
-        <!-- Sign Up Container -->
-        <div class="form-container sign-up-container">
-            <form id="registerForm">
-                <h1>Create Account</h1>
-                <span>or use your email for registration</span>
-                <input type="text" id="reg-name" placeholder="Name" required />
-                <input type="email" id="reg-email" placeholder="Email" required />
-                <input type="tel" id="reg-phone" placeholder="Phone (10 digits)" required pattern="[0-9]{10}" />
-                <input type="date" id="reg-dob" placeholder="Date of Birth" required style="color-scheme: dark;" />
-                <select id="reg-subject" required>
-                    <option value="" disabled selected>Select Subject</option>
-                    <option value="Python">Python</option>
-                    <option value="Web Design">Web Design</option>
-                    <option value="IoT">IoT</option>
-                    <option value="Computer Fundamentals">Computer Fundamentals</option>
-                </select>
-                <input type="password" id="reg-password" placeholder="Password" required minlength="6" />
-                <button type="submit">Sign Up</button>
-                <div id="reg-alert" class="alert-msg"></div>
-            </form>
-        </div>
-
-        <!-- Sign In Container -->
-        <div class="form-container sign-in-container">
+    <div class="glass-panel auth-container {{ 'right-panel-active' if active_panel == 'register' else '' }}" id="container">
+        
+        <!-- Login Side -->
+        <div class="auth-form-side login-side">
             <form id="loginForm">
-                <h1 style="margin-bottom: 2rem;">Sign in</h1>
-                <span>or use your account</span>
-                <input type="text" id="login-roll" placeholder="Roll Number" required />
-                <input type="password" id="login-password" placeholder="Password" required />
-                <input type="date" id="login-dob" placeholder="Date of Birth" required style="color-scheme: dark;" />
-                <a href="#">Forgot your password?</a>
-                <button type="submit">Sign In</button>
+                <h2 style="margin-bottom: 30px;">Access <span class="text-gradient">Portal</span></h2>
+                <div class="form-group">
+                    <input type="text" id="login-roll" class="form-input" placeholder="Roll Number" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="login-password" class="form-input" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="login-dob" class="form-input" required style="color-scheme: dark;">
+                </div>
+                <button type="submit" class="btn btn-primary btn-glow" style="width: 100%;">Sign In</button>
                 <div id="login-alert" class="alert-msg"></div>
             </form>
         </div>
 
-        <!-- Overlay Container -->
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h1>Welcome Back!</h1>
-                    <p>To keep connected with us please login with your personal info</p>
-                    <button class="ghost" id="signIn">Sign In</button>
+        <!-- Register Side -->
+        <div class="auth-form-side register-side">
+            <form id="registerForm">
+                <h2 style="margin-bottom: 25px;">Create <span class="text-gradient">Account</span></h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <input type="text" id="reg-name" class="form-input" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="reg-email" class="form-input" placeholder="Email" required>
+                    </div>
                 </div>
-                <div class="overlay-panel overlay-right">
-                    <h1>Hello, Friend!</h1>
-                    <p>Enter your personal details and start your journey with us</p>
-                    <button class="ghost" id="signUp">Sign Up</button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <input type="tel" id="reg-phone" class="form-input" placeholder="Phone" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" id="reg-dob" class="form-input" required style="color-scheme: dark;">
+                    </div>
                 </div>
+                <div class="form-group">
+                    <select id="reg-subject" class="form-input" required style="background-color: var(--bg-surface);">
+                        <option value="" disabled selected>Select Subject</option>
+                        <option value="Python">Python</option>
+                        <option value="Web Design">Web Design</option>
+                        <option value="IoT">IoT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="reg-password" class="form-input" placeholder="Password" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-secondary" style="width: 100%;">Initialize Identity</button>
+                <div id="reg-alert" class="alert-msg"></div>
+            </form>
+        </div>
+
+        <!-- Overlay -->
+        <div class="auth-overlay">
+            <div id="overlay-login-content">
+                <h1>Hello, Candidate!</h1>
+                <p style="margin: 20px 0 30px; opacity: 0.9;">Start your futuristic assessment journey by creating an account.</p>
+                <button class="btn btn-outline" id="signUp" style="border-color: white; color: white;">Sign Up</button>
+            </div>
+            <div id="overlay-register-content" style="display: none;">
+                <h1>Welcome Back!</h1>
+                <p style="margin: 20px 0 30px; opacity: 0.9;">Please log in with your credentials to access your dashboard.</p>
+                <button class="btn btn-outline" id="signIn" style="border-color: white; color: white;">Sign In</button>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // Particles Config
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#ffffff" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.5, "random": false },
-                "size": { "value": 3, "random": true },
-                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
-                "move": { "enable": true, "speed": 3, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
-                "modes": { "repulse": { "distance": 200, "duration": 0.4 }, "push": { "particles_nb": 4 } }
-            },
-            "retina_detect": true
-        });
-
         const signUpButton = document.getElementById('signUp');
         const signInButton = document.getElementById('signIn');
         const container = document.getElementById('container');
+        const overlayLogin = document.getElementById('overlay-login-content');
+        const overlayRegister = document.getElementById('overlay-register-content');
 
         signUpButton.addEventListener('click', () => {
             container.classList.add("right-panel-active");
+            overlayLogin.style.display = 'none';
+            overlayRegister.style.display = 'block';
         });
 
         signInButton.addEventListener('click', () => {
             container.classList.remove("right-panel-active");
+            overlayLogin.style.display = 'block';
+            overlayRegister.style.display = 'none';
         });
 
         // Register Logic
@@ -400,7 +188,7 @@
             e.preventDefault();
             const alert = document.getElementById('reg-alert');
             alert.textContent = 'Processing...';
-            alert.className = 'alert-msg info';
+            alert.style.color = 'var(--info)';
 
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
@@ -417,18 +205,18 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    alert.textContent = `Success! Redirecting...`;
-                    alert.className = 'alert-msg success';
+                    alert.textContent = `Success! Roll: ${data.roll_number}`;
+                    alert.style.color = 'var(--success)';
                     setTimeout(() => {
                         window.location.href = `/registration_complete/${data.roll_number}`;
-                    }, 1000);
+                    }, 1500);
                 } else {
                     alert.textContent = data.message;
-                    alert.className = 'alert-msg error';
+                    alert.style.color = 'var(--error)';
                 }
             } catch (err) {
                 alert.textContent = 'Error: ' + err.message;
-                alert.className = 'alert-msg error';
+                alert.style.color = 'var(--error)';
             }
         });
 
@@ -437,7 +225,7 @@
             e.preventDefault();
             const alert = document.getElementById('login-alert');
             alert.textContent = 'Verifying...';
-            alert.className = 'alert-msg info';
+            alert.style.color = 'var(--info)';
 
             const roll_number = document.getElementById('login-roll').value;
             const password = document.getElementById('login-password').value;
@@ -451,18 +239,18 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    alert.textContent = 'Login Successful!';
-                    alert.className = 'alert-msg success';
+                    alert.textContent = 'Identity Confirmed!';
+                    alert.style.color = 'var(--success)';
                     setTimeout(() => {
                         window.location.href = data.redirect;
-                    }, 800);
+                    }, 1000);
                 } else {
                     alert.textContent = data.message;
-                    alert.className = 'alert-msg error';
+                    alert.style.color = 'var(--error)';
                 }
             } catch (err) {
                 alert.textContent = 'Error: ' + err.message;
-                alert.className = 'alert-msg error';
+                alert.style.color = 'var(--error)';
             }
         });
     </script>

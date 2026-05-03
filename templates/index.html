@@ -4,599 +4,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Oxford Group of Institution - Secure Online Exam Portal">
-    <title>Oxford Group of Institution - Exam Portal</title>
+    <meta name="description" content="Smart Online Examination Portal - Secure, Reliable, and Futuristic">
+    <title>Smart Online Exam Portal - Dark Satellite</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap&font-display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --error-color: #ff4757;
-            --success-color: #00d2d3;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #0f172a;
-            color: #ffffff;
-            font-family: 'Outfit', sans-serif;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-
-        /* Screen reader only class */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-
-        /* Animated Background */
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background:
-                radial-gradient(circle at 10% 20%, rgba(0, 198, 255, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(0, 114, 255, 0.1) 0%, transparent 20%);
-            animation: bg-pulse 10s ease-in-out infinite alternate;
-        }
-
-        @keyframes bg-pulse {
-            0% {
-                opacity: 0.5;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1.1);
-            }
-        }
-
-        .hero-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .hero-content {
-            z-index: 1;
-            width: 100%;
-            max-width: 800px;
-        }
-
-        .typing-text-institution {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0, 198, 255, 0.3);
-            min-height: 1.2em;
-        }
-
-        .typing-text-dev {
-            font-size: 1.1rem;
-            letter-spacing: 3px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 4rem;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .heart-icon {
-            color: var(--error-color);
-            margin: 0 8px;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        .exam-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 3rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            transform: translateY(20px);
-            opacity: 0;
-            animation: fade-up 0.8s ease-out forwards 0.5s;
-        }
-
-        @keyframes fade-up {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .card-header h2 {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: white;
-        }
-
-        .card-header p {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 2rem;
-            font-size: 1.05rem;
-        }
-
-        .controls-grid {
+        .feature-grid {
             display: grid;
-            grid-template-columns: 1fr 1.5fr auto;
-            gap: 1.5rem;
-            align-items: center;
-            margin-top: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 60px;
         }
-
-        .subject-wrapper {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            width: 100%;
+        .feature-card {
+            padding: 35px;
+            text-align: center;
         }
-
-        .subject-select {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: white;
-            font-family: inherit;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1.2em;
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
         }
-
-        .subject-select:hover {
-            border-color: rgba(255, 255, 255, 0.35);
-            background-color: rgba(0, 0, 0, 0.35);
+        .hero-title {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
         }
-
-        .subject-select:focus {
-            outline: none;
-            border-color: #00C6FF;
-            box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.25);
+        .trust-section {
+            padding: 100px 0;
+            border-top: 1px solid var(--border-glass);
+            margin-top: 100px;
         }
-
-        .error-message {
-            color: var(--error-color);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            min-height: 1.2rem;
-            display: none;
-            animation: fadeIn 0.3s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Modern Button Styles */
-        .btn-modern {
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            text-decoration: none;
-            font-family: 'Outfit', sans-serif;
-            border: none;
-            font-size: 1rem;
-        }
-
-        .btn-Login {
-            background: transparent;
-            border: 1px solid var(--glass-border);
-            color: white;
-        }
-
-        .btn-Login:hover {
-            border-color: white;
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .btn-Login:active {
-            transform: translateY(0);
-        }
-
-        .btn-Start {
-            background: var(--primary-gradient);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.35);
-        }
-
-        .btn-Start:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 198, 255, 0.5);
-        }
-
-        .btn-Start:active:not(:disabled) {
-            transform: translateY(0);
-            box-shadow: 0 2px 10px rgba(0, 198, 255, 0.4);
-        }
-
-        .btn-Start:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        .btn-Start:focus-visible:not(:disabled) {
-            outline: 2px solid #00C6FF;
-            outline-offset: 2px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .typing-text-institution {
-                font-size: 2.3rem;
-                line-height: 1.1;
-            }
-
-            .typing-text-dev {
-                font-size: 0.95rem;
-                letter-spacing: 2px;
-                margin-bottom: 2.5rem;
-            }
-
-            .controls-grid {
-                grid-template-columns: 1fr;
-                gap: 1.2rem;
-            }
-
-            .exam-card {
-                padding: 2rem;
-                margin: 0 1rem;
-            }
-
-            /* Native mobile picker for better UX */
-            .subject-select {
-                appearance: auto;
-                background-image: none;
-                padding: 1.1rem;
-            }
-
-            .subject-wrapper {
-                grid-column: span 2;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .typing-text-institution {
-                font-size: 1.9rem;
-            }
-            .controls-grid {
-                grid-template-columns: 1fr;
-            }
-            .btn-modern {
-                width: 100%;
-                justify-content: center;
-            }
-            .subject-wrapper {
-                grid-column: span 1;
-            }
-        }
-
-        /* Spinner */
-        #loading-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        #loading-overlay.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .spinner {
-            width: 56px;
-            height: 56px;
-            border: 4px solid rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-            border-top-color: #00C6FF;
-            animation: spin 0.9s linear infinite;
-            margin-bottom: 1.2rem;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Focus visible for accessibility */
-        .btn-modern:focus-visible, 
-        .subject-select:focus-visible {
-            outline: 2px solid #00C6FF;
-            outline-offset: 2px;
-        }
-
-        /* Reduced motion preference */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-            .spinner {
-                animation: none;
-            }
+        .testimonial-card {
+            padding: 30px;
+            margin-top: 40px;
         }
     </style>
 </head>
 
 <body>
-    <div class="animated-bg"></div>
+    <div class="bg-stellar"></div>
 
-    <!-- Sidebar Navigation -->
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
-    <nav class="sidebar" id="sidebar" aria-label="Main Navigation">
-        <div class="sidebar-header">
-            <h3>Menu</h3>
-            <button class="close-btn" id="close-sidebar" aria-label="Close menu">&times;</button>
-        </div>
-        <ul class="sidebar-nav">
-            <li><a href="/" class="nav-link active" aria-current="page"><i class="fas fa-home" aria-hidden="true"></i> Home</a></li>
-            <li><a href="/register" class="nav-link"><i class="fas fa-user-plus" aria-hidden="true"></i> Register</a></li>
-            <li><a href="/login" class="nav-link"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Student Login</a></li>
-            <li><a href="/admin/login" class="nav-link"><i class="fas fa-user-shield" aria-hidden="true"></i> Admin</a></li>
-            <li><a href="/portfolio" class="nav-link"><i class="fas fa-id-card" aria-hidden="true"></i> Developer Profile</a></li>
-        </ul>
-    </nav>
-
-    <!-- Hamburger Menu -->
-    <button class="hamburger-menu" id="hamburger-btn" aria-label="Open main menu" aria-expanded="false">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-    </button>
-
-    <!-- Main Content -->
-    <main class="hero-section" role="main">
-        <div class="hero-content text-center">
-            <!-- Typing Effect for Institution Name -->
-            <h1 class="typing-text-institution" id="institution-text" aria-live="polite"></h1>
-
-            <!-- Typing Effect for Developer Name -->
-            <p class="typing-text-dev">
-                <i class="fas fa-heart heart-icon" aria-hidden="true"></i>
-                <span id="dev-name-text" aria-live="polite"></span>
-            </p>
-
-            <!-- Exam Card -->
-            <div class="exam-card" role="region" aria-labelledby="exam-card-header">
-                <div class="card-header">
-                    <h2 id="exam-card-header">Start Your Journey</h2>
-                    <p>Select your subject to begin the assessment</p>
-                </div>
-
-                <div class="controls-grid">
-                    <a href="{{ url_for('login_page') }}" class="btn-modern btn-Login" aria-label="Student Login">
-                        <i class="fas fa-user-graduate" aria-hidden="true"></i> Student Login
-                    </a>
-
-                    <div class="subject-wrapper">
-                        <label for="subject-select" class="sr-only">Select Subject</label>
-                        <select id="subject-select" class="subject-select" aria-label="Select Subject">
-                            <option value="">Select Subject...</option>
-                            {% for subject in subjects %}
-                            <option value="{{ subject|e }}">{{ subject|e }}</option>
-                            {% endfor %}
-                        </select>
-                        <p id="subject-error" class="error-message" role="alert">
-                            <i class="fas fa-exclamation-circle" aria-hidden="true"></i> Please select a subject
-                        </p>
-                    </div>
-
-                    <button id="start-exam-btn" class="btn-modern btn-Start" aria-label="Start Exam">
-                        Start Exam <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                    </button>
-                </div>
+    <nav class="navbar">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="navbar-brand text-gradient">DARK SATELLITE</a>
+            <div style="display: flex; gap: 20px;">
+                <a href="/login" class="nav-link">Student Login</a>
+                <a href="/admin/login" class="nav-link">Admin</a>
             </div>
         </div>
+    </nav>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section style="min-height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 0;">
+            <h1 class="hero-title animate-slide-up">Smart Online <span class="text-gradient">Examination Portal</span></h1>
+            <p style="font-size: 1.25rem; color: var(--text-dim); max-width: 700px; margin-bottom: 40px;" class="animate-slide-up">
+                Experience the future of assessments with our secure, immersive, and high-tech examination environment. Designed for excellence and high-performance.
+            </p>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;" class="animate-slide-up">
+                <a href="{{ url_for('login_page') }}" class="btn btn-primary btn-glow">Start Your Exam</a>
+                <a href="/register" class="btn btn-outline">Student Signup</a>
+            </div>
+
+            <!-- Feature Cards -->
+            <div class="feature-grid animate-slide-up" style="animation-delay: 0.2s;">
+                <div class="glass-panel feature-card">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <h3>Secure Exam</h3>
+                    <p style="color: var(--text-dim); margin-top: 10px;">Advanced proctoring and secure environment to ensure integrity.</p>
+                </div>
+                <div class="glass-panel feature-card">
+                    <i class="fas fa-clock feature-icon"></i>
+                    <h3>Precision Timer</h3>
+                    <p style="color: var(--text-dim); margin-top: 10px;">Highly accurate countdown with auto-submit functionality.</p>
+                </div>
+                <div class="glass-panel feature-card">
+                    <i class="fas fa-bolt feature-icon"></i>
+                    <h3>Instant Results</h3>
+                    <p style="color: var(--text-dim); margin-top: 10px;">Detailed performance analytics available immediately after submission.</p>
+                </div>
+                <div class="glass-panel feature-card">
+                    <i class="fas fa-mobile-alt feature-icon"></i>
+                    <h3>Responsive Design</h3>
+                    <p style="color: var(--text-dim); margin-top: 10px;">Seamless experience across desktop, tablet, and mobile devices.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Exams Section -->
+        <section style="padding: 80px 0;">
+            <h2 class="text-center" style="margin-bottom: 50px;">Available <span class="text-gradient">Assessments</span></h2>
+            <div class="glass-panel" style="padding: 40px;">
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    {% for subject in subjects %}
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--border-glass);">
+                        <div>
+                            <h4 style="margin: 0;">{{ subject }} Certification Exam</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Duration: 30 Mins | 25 Questions</p>
+                        </div>
+                        <a href="{{ url_for('exam_details_page', subject=subject) }}" class="btn btn-outline btn-sm">Join Now</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="trust-section">
+            <h2 class="text-center">Trusted by <span class="text-gradient">Global Students</span></h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div class="glass-panel testimonial-card">
+                    <p style="font-style: italic; color: var(--text-bright);">"The most immersive exam portal I've ever used. The dark theme is so easy on the eyes!"</p>
+                    <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--grad-stellar);"></div>
+                        <div>
+                            <h5 style="margin: 0;">Alex Johnson</h5>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Computer Science Student</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel testimonial-card">
+                    <p style="font-style: italic; color: var(--text-bright);">"The analytics after the exam helped me identify my weak spots instantly. Highly recommended!"</p>
+                    <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--grad-nebula);"></div>
+                        <div>
+                            <h5 style="margin: 0;">Sarah Williams</h5>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">UI/UX Designer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
+    <footer style="padding: 60px 0; border-top: 1px solid var(--border-glass); margin-top: 80px; text-align: center;">
+        <p style="color: var(--text-muted);">&copy; 2024 Dark Satellite. All Rights Reserved.</p>
+    </footer>
+
     <!-- Loading Overlay -->
-    <div id="loading-overlay" aria-live="assertive" aria-busy="true">
-        <div class="spinner" role="status" aria-label="Loading"></div>
-        <p id="loading-text" style="letter-spacing: 1px; font-weight: 500; font-size: 1.1rem;">Initializing Environment...</p>
+    <div id="loading-overlay" style="position: fixed; inset: 0; background: var(--bg-deep); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;">
+        <div style="width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <p style="margin-top: 20px; color: var(--text-bright);">Initializing Environment...</p>
     </div>
 
-    <script>
-        // Typing Effect with accessibility
-        const institutionText = "OXFORD GROUP OF INSTITUTION";
-        const devNameText = "Developed by Ravi Kumar"; // Professional text
-
-        async function typeText(elementId, text, speed = 60, delay = 0) {
-            const element = document.getElementById(elementId);
-            if (!element) return;
-            
-            element.innerHTML = '';
-            await new Promise(r => setTimeout(r, delay));
-            
-            for (let i = 0; i < text.length; i++) {
-                element.innerHTML += text.charAt(i);
-                await new Promise(resolve => setTimeout(resolve, speed));
-            }
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .animate-slide-up {
+            animation: slideUp 0.8s ease-out both;
         }
-
-        // Initialize typing effects
-        document.addEventListener('DOMContentLoaded', async () => {
-            await typeText('institution-text', institutionText, 50, 200);
-            await typeText('dev-name-text', devNameText, 80, 500);
-            
-            // Initialize form validation
-            initExamForm();
-        });
-
-        // Exam Form Logic with full validation
-        function initExamForm() {
-            const startBtn = document.getElementById('start-exam-btn');
-            const subjectSelect = document.getElementById('subject-select');
-            const errorElement = document.getElementById('subject-error');
-            const loadingText = document.getElementById('loading-text');
-            const overlay = document.getElementById('loading-overlay');
-            
-            // Disable button initially
-            startBtn.disabled = true;
-            
-            // Validate on subject change
-            subjectSelect.addEventListener('change', () => {
-                if (subjectSelect.value) {
-                    startBtn.disabled = false;
-                    hideError();
-                } else {
-                    startBtn.disabled = true;
-                    hideError();
-                }
-            });
-            
-            // Start exam handler
-            startBtn.addEventListener('click', () => {
-                // Check login status (server-side rendered)
-                const isLoggedIn = {{ 'true' if session.get('student_roll') else 'false' }};
-                
-                if (!isLoggedIn) {
-                    window.location.href = "{{ url_for('login_page') }}";
-                    return;
-                }
-                
-                const subject = subjectSelect.value.trim();
-                
-                if (!subject) {
-                    showError();
-                    subjectSelect.focus();
-                    return;
-                }
-                
-                // Update loading message with subject name
-                loadingText.textContent = `Loading ${subject} exam environment...`;
-                overlay.classList.add('visible');
-                
-                // Redirect after simulated load
-                setTimeout(() => {
-                    window.location.href = '/exam/' + encodeURIComponent(subject);
-                }, 800);
-            });
-            
-            // Helper functions
-            function showError() {
-                errorElement.style.display = 'block';
-                subjectSelect.style.borderColor = 'var(--error-color)';
-                subjectSelect.style.boxShadow = '0 0 0 3px rgba(255, 71, 87, 0.2)';
-                
-                // Auto-hide after 3 seconds
-                setTimeout(hideError, 3000);
-            }
-            
-            function hideError() {
-                errorElement.style.display = 'none';
-                subjectSelect.style.borderColor = '';
-                subjectSelect.style.boxShadow = '';
-            }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        // Sidebar Toggle with ARIA
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.getElementById('hamburger-btn');
-            const sidebar = document.getElementById('sidebar');
-            const closeBtn = document.getElementById('close-sidebar');
-            const sidebarOverlay = document.getElementById('sidebar-overlay');
-            
-            if (!hamburger || !sidebar || !closeBtn || !sidebarOverlay) return;
-            
-            const toggleSidebar = () => {
-                const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
-                const newState = !isExpanded;
-                
-                hamburger.setAttribute('aria-expanded', newState);
-                sidebar.classList.toggle('active', newState);
-                sidebarOverlay.classList.toggle('active', newState);
-                hamburger.classList.toggle('active', newState);
-                
-                // Trap focus in sidebar when open (basic implementation)
-                if (newState) {
-                    const firstLink = sidebar.querySelector('a');
-                    if (firstLink) firstLink.focus();
-                }
-            };
-            
-            hamburger.addEventListener('click', toggleSidebar);
-            closeBtn.addEventListener('click', toggleSidebar);
-            sidebarOverlay.addEventListener('click', toggleSidebar);
-            
-            // Close sidebar on ESC key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && sidebar.classList.contains('active')) {
-                    toggleSidebar();
-                    hamburger.focus();
-                }
-            });
-        });
-    </script>
+    </style>
 </body>
 
 </html>

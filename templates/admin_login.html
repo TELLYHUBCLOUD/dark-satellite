@@ -4,165 +4,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Dark Satellite</title>
+    <title>Admin Authentication - Dark Satellite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         body {
-            font-family: 'Outfit', sans-serif;
-            background: #0f172a;
-            color: white;
-            min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            overflow: hidden;
+            align-items: center;
+            min-height: 100vh;
+            background: #020617;
+            margin: 0;
         }
-
-        .login-card {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 3rem;
+        .admin-login-card {
             width: 100%;
-            max-width: 400px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.8s ease-out;
-            position: relative;
-            z-index: 10;
+            max-width: 450px;
+            padding: 50px;
+            text-align: center;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .admin-icon {
+        .admin-logo {
             width: 80px;
             height: 80px;
-            background: rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.1);
             color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            margin: 0 auto 2rem;
+            margin: 0 auto 30px;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+        }
+        .btn-admin-primary {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            color: white;
             box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
         }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-weight: 700;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: white;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        input:focus {
-            border-color: #ef4444;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-admin {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-admin:hover {
+        .btn-admin-primary:hover {
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
-        }
-
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 1.5rem;
-            color: rgba(255, 255, 255, 0.4);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .back-link:hover {
-            color: white;
-        }
-
-        /* Animated Background */
-        .admin-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            background:
-                radial-gradient(circle at 10% 10%, rgba(239, 68, 68, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 90%, rgba(239, 68, 68, 0.1) 0%, transparent 20%);
-            animation: pulse-bg 10s infinite alternate;
-        }
-
-        @keyframes pulse-bg {
-            0% {
-                opacity: 0.5;
-            }
-
-            100% {
-                opacity: 1;
-            }
         }
     </style>
 </head>
 
 <body>
-    <div class="admin-bg"></div>
+    <div class="bg-stellar" style="opacity: 0.5;"></div>
 
-    <div class="login-card">
-        <div class="admin-icon">
-            <i class="fas fa-user-shield"></i>
+    <div class="glass-panel admin-login-card animate-slide-up">
+        <div class="admin-logo">
+            <i class="fas fa-shield-alt"></i>
         </div>
-        <h2>Admin Portal</h2>
+        <h2 style="margin-bottom: 10px;">Security <span style="color: #ef4444;">Override</span></h2>
+        <p style="color: var(--text-dim); margin-bottom: 40px; font-size: 0.9rem;">Administrative authorization required.</p>
 
         <form id="adminLoginForm">
             <div class="form-group">
-                <input type="text" id="username" placeholder="Username" required>
+                <input type="text" id="username" class="form-input" placeholder="Credential ID" required style="border-color: rgba(239, 68, 68, 0.1);">
             </div>
             <div class="form-group">
-                <input type="password" id="password" placeholder="Password" required>
+                <input type="password" id="password" class="form-input" placeholder="Security Key" required style="border-color: rgba(239, 68, 68, 0.1);">
             </div>
-            <button type="submit" class="btn-admin">Login</button>
+            <button type="submit" class="btn btn-admin-primary" style="width: 100%; margin-top: 20px;">Authorize Entry</button>
         </form>
 
-        <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        <a href="/" class="btn btn-outline" style="width: 100%; margin-top: 20px; border: none; font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-arrow-left"></i> Exit to Surface</a>
     </div>
 
     <script>
@@ -170,7 +77,7 @@
             e.preventDefault();
             const btn = e.target.querySelector('button');
             const originalText = btn.innerText;
-            btn.innerText = 'Authenticating...';
+            btn.innerText = 'Verifying...';
             btn.disabled = true;
 
             const username = document.getElementById('username').value;
@@ -192,8 +99,7 @@
                     btn.disabled = false;
                 }
             } catch (err) {
-                console.error(err);
-                alert('An error occurred');
+                alert('Connection failure.');
                 btn.innerText = originalText;
                 btn.disabled = false;
             }

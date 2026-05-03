@@ -11,142 +11,146 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Ensure portfolio is visible immediately since it's a standalone page */
-        .portfolio-section {
-            background-color: var(--bg-dark);
-            min-height: 100vh;
-            padding-top: 80px;
-            /* Space for back button */
+        .portfolio-main {
+            padding-top: 100px;
+            padding-bottom: 80px;
         }
-
-        .back-nav {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
+        .profile-hero {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+        @media (max-width: 768px) {
+            .profile-hero { flex-direction: column; text-align: center; }
+        }
+        .profile-img-glow {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            padding: 5px;
+            background: var(--grad-stellar);
+            box-shadow: var(--shadow-neon);
+        }
+        .profile-img-glow img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--bg-deep);
+        }
+        .resume-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 992px) {
+            .resume-grid { grid-template-columns: 1fr; }
+        }
+        .timeline-box {
+            border-left: 2px solid var(--border-glass);
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .timeline-box::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
         }
     </style>
 </head>
 
 <body>
-    <div class="back-nav">
-        <a href="/" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back to Home</a>
-    </div>
+    <div class="bg-stellar"></div>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio-section">
+    <nav class="navbar">
         <div class="container">
-            <h2 class="section-title text-center">Developer Profile</h2>
-            <div class="portfolio-grid">
-                <!-- Profile Card -->
-                <div class="profile-card glass-card">
-                    <div class="profile-header">
-                        <div class="profile-img-container">
-                            <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Ravi Kumar"
-                                class="profile-img">
-                        </div>
-                        <h3>RAVI KUMAR</h3>
-                        <p class="role">SAP End User | Data Entry Executive</p>
-                        <div class="social-links">
-                            <a href="https://linkedin.com/in/i-am-ravikumar" target="_blank"><i
-                                    class="fab fa-linkedin"></i></a>
-                            <a href="mailto:shakyar014@gmail.com"><i class="fas fa-envelope"></i></a>
-                            <a href="tel:+918400698715"><i class="fas fa-phone"></i></a>
-                        </div>
-                    </div>
-                    <div class="profile-details">
-                        <div class="detail-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>NOIDA (UP) 201301</span>
-                        </div>
-                        <p class="profile-bio">
-                            Results-driven SAP End User with over 6 years of experience in Sales, Accounts, and MIS.
-                            Specializing in SAP S/4 HANA Finance, Business One, and Process Integration.
-                        </p>
-                    </div>
-                </div>
+            <a href="/" class="btn btn-outline btn-sm"><i class="fas fa-arrow-left"></i> Back to Portal</a>
+        </div>
+    </nav>
 
-                <!-- Resume Details -->
-                <div class="resume-content">
-                    <!-- Experience -->
-                    <div class="resume-block glass-card">
-                        <h3><i class="fas fa-briefcase"></i> Professional Experience</h3>
-
-                        <div class="timeline-item">
-                            <div class="timeline-header">
-                                <h4>Data Entry Executive (SAP B1)</h4>
-                                <span class="date">06/2022 – Present</span>
-                            </div>
-                            <p class="company">Trusound Pvt Ltd. (AHUJA RADIOS) | Noida</p>
-                            <ul>
-                                <li>Process purchase orders, GRPO, and manage inventory transactions.</li>
-                                <li>Create and update Item Codes, Suppliers, and BOM.</li>
-                                <li>Assist in production processes for in-house and job workers.</li>
-                            </ul>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-header">
-                                <h4>MIS Executive</h4>
-                                <span class="date">05/2021 – 05/2022</span>
-                            </div>
-                            <p class="company">RD Automobile | Nawabganj</p>
-                            <ul>
-                                <li>Track inventory of raw materials and finished vehicles.</li>
-                                <li>Create production schedules and efficiency reports.</li>
-                                <li>Provide KPI dashboards to management.</li>
-                            </ul>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-header">
-                                <h4>Account Executive (Tally Erp 9)</h4>
-                                <span class="date">04/2019 – 03/2020</span>
-                            </div>
-                            <p class="company">Soham Infratech | Greater Noida</p>
-                            <ul>
-                                <li>General ledger, vouchers, AP/AR, Bank Reconciliation, GST/TDS.</li>
-                                <li>Payroll and Attendance integration.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Skills & Education Grid -->
-                    <div class="skills-edu-grid">
-                        <div class="resume-block glass-card">
-                            <h3><i class="fas fa-graduation-cap"></i> Education</h3>
-                            <div class="edu-item">
-                                <h4>Master of Commerce (M.COM)</h4>
-                                <p>Swami Vivekanand Subharti University</p>
-                                <span class="date">2020 – 2024</span>
-                            </div>
-                            <div class="edu-item">
-                                <h4>Bachelor of Commerce (B.COM)</h4>
-                                <p>Shri Rajendra Singh College</p>
-                                <span class="date">2017 – 2019</span>
-                            </div>
-                        </div>
-
-                        <div class="resume-block glass-card">
-                            <h3><i class="fas fa-tools"></i> Skills</h3>
-                            <div class="skills-tags">
-                                <span>SAP S/4HANA Finance</span>
-                                <span>SAP Business One</span>
-                                <span>Tally ERP 9</span>
-                                <span>MS Excel (Adv)</span>
-                                <span>MS PowerPoint</span>
-                                <span>SQL (Basic)</span>
-                                <span>Python (Basic)</span>
-                                <span>IOT</span>
-                                <span>AGENT AI</span>
-                            </div>
-                        </div>
-                    </div>
-
+    <main class="container portfolio-main">
+        <!-- Hero Section -->
+        <div class="profile-hero">
+            <div class="profile-img-glow animate-slide-up">
+                <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Ravi Kumar">
+            </div>
+            <div class="animate-slide-up" style="animation-delay: 0.1s;">
+                <h4 style="color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">Architect & Developer</h4>
+                <h1 style="font-size: 3.5rem; margin: 0;">Ravi <span class="text-gradient">Kumar</span></h1>
+                <p style="color: var(--text-dim); font-size: 1.2rem; margin-top: 15px; max-width: 600px;">
+                    Results-driven SAP End User & Developer specializing in high-performance digital architectures, SAP S/4HANA, and integrated MIS systems.
+                </p>
+                <div style="display: flex; gap: 20px; margin-top: 30px;">
+                    <a href="https://linkedin.com/in/i-am-ravikumar" class="btn btn-primary btn-sm"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                    <a href="mailto:shakyar014@gmail.com" class="btn btn-outline btn-sm"><i class="fas fa-envelope"></i> Contact</a>
                 </div>
             </div>
         </div>
-    </section>
+
+        <div class="resume-grid">
+            <!-- Experience -->
+            <div class="animate-slide-up" style="animation-delay: 0.2s;">
+                <h3 style="margin-bottom: 30px;"><i class="fas fa-briefcase" style="color: var(--primary); margin-right: 15px;"></i> Professional Journey</h3>
+                
+                <div class="timeline-box">
+                    <h4 style="margin: 0;">Data Entry Executive (SAP B1)</h4>
+                    <p style="color: var(--primary); font-size: 0.8rem; font-weight: 700;">TRUSOUND PVT LTD | 2022 - PRESENT</p>
+                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 10px;">Managing inventory transactions, BOM optimization, and SAP Business One process integration.</p>
+                </div>
+
+                <div class="timeline-box">
+                    <h4 style="margin: 0;">MIS Executive</h4>
+                    <p style="color: var(--primary); font-size: 0.8rem; font-weight: 700;">RD AUTOMOBILE | 2021 - 2022</p>
+                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 10px;">Developed KPI dashboards and tracking systems for production scheduling and efficiency reporting.</p>
+                </div>
+
+                <div class="timeline-box">
+                    <h4 style="margin: 0;">Account Executive (Tally ERP 9)</h4>
+                    <p style="color: var(--primary); font-size: 0.8rem; font-weight: 700;">SOHAM INFRATECH | 2019 - 2020</p>
+                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 10px;">Handled General Ledger, AP/AR, and payroll integration using Tally ERP systems.</p>
+                </div>
+            </div>
+
+            <!-- Skills & Education -->
+            <div class="animate-slide-up" style="animation-delay: 0.3s;">
+                <div class="glass-panel" style="padding: 40px; margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 25px;"><i class="fas fa-tools" style="color: var(--accent); margin-right: 15px;"></i> Technical Arsenal</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <span style="background: rgba(0, 210, 255, 0.1); color: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(0, 210, 255, 0.2);">SAP S/4HANA</span>
+                        <span style="background: rgba(0, 210, 255, 0.1); color: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(0, 210, 255, 0.2);">SAP Business One</span>
+                        <span style="background: rgba(0, 210, 255, 0.1); color: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(0, 210, 255, 0.2);">Python</span>
+                        <span style="background: rgba(0, 210, 255, 0.1); color: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(0, 210, 255, 0.2);">SQL</span>
+                        <span style="background: rgba(0, 210, 255, 0.1); color: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(0, 210, 255, 0.2);">Tally ERP 9</span>
+                        <span style="background: rgba(0, 210, 255, 0.1); color: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(0, 210, 255, 0.2);">Advanced Excel</span>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="padding: 40px;">
+                    <h3 style="margin-bottom: 25px;"><i class="fas fa-graduation-cap" style="color: var(--success); margin-right: 15px;"></i> Academic Credentials</h3>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="margin: 0;">Master of Commerce (M.COM)</h4>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Swami Vivekanand Subharti University | 2020 - 2024</p>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0;">Bachelor of Commerce (B.COM)</h4>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Shri Rajendra Singh College | 2017 - 2019</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="padding: 40px 0; text-align: center; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border-glass); margin-top: 60px;">
+        Designed & Developed with Precision by Ravi Kumar &copy; 2024
+    </footer>
 </body>
 
 </html>

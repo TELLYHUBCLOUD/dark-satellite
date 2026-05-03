@@ -202,17 +202,47 @@ def logout():
 @app.route('/subjects')
 @login_required
 def subjects_page():
-    """Subjects selection page"""
-    subjects = Question.get_subjects()
-    
-    # Restrict to registered subject if available
+    """Student Dashboard / Subjects page"""
     student_roll = session.get('student_roll')
-    if student_roll:
-        student = Student.get_by_roll(student_roll)
-        if student and student.get('subject'):
-            subjects = [student['subject']]
-            
-    return render_template('subjects.html', subjects=subjects)
+    student = Student.get_by_roll(student_roll)
+    exams = Exam.get_by_student(student_roll)
+    
+    # Calculate some basic stats
+    completed_exams = [e for e in exams if e.get('status') == 'completed']
+    total_completed = len(completed_exams)
+    avg_score = sum([e.get('percentage', 0) for e in completed_exams]) / total_completed if total_completed > 0 else 0
+    
+    # Get all subjects for "available tests"
+    all_subjects = Question.get_subjects()
+    
+    # Filter out subjects already taken
+    taken_subjects = [e.get('subject') for e in completed_exams]
+    available_subjects = [s for s in all_subjects if s not in taken_subjects]
+    
+    return render_template('subjects.html', 
+                         student=student, 
+                         exams=completed_exams, 
+                         total_completed=total_completed,
+                         avg_score=round(avg_score, 1),
+                         available_subjects=available_subjects)
+
+@app.route('/exam_details/<subject>')
+@login_required
+def exam_details_page(subject):
+    """Exam details and instructions page"""
+    subject = unquote(subject)
+    student_roll = session.get('student_roll')
+    
+    # Check if exam already exists
+    existing_exam = Exam.get_by_student_and_subject(student_roll, subject)
+    if existing_exam and existing_exam['status'] == 'completed':
+        return redirect(url_for('result_page', roll_number=student_roll))
+        
+    return render_template('exam_details.html', 
+                         subject=subject,
+                         student_name=session.get('student_name'),
+                         duration=app.config['EXAM_DURATION_MINUTES'],
+                         total_questions=app.config['TOTAL_QUESTIONS'])
 
 @app.route('/exam/<subject>')
 @login_required
@@ -227,6 +257,8 @@ def exam_page(subject):
     if existing_exam and existing_exam['status'] == 'completed':
         return redirect(url_for('result_page', roll_number=student_roll))
     
+    # If starting fresh, ensure they came through details or have an active session
+    # (Simplified for now, just render)
     return render_template('exam.html', 
                          student_name=session.get('student_name'),
                          duration=app.config['EXAM_DURATION_MINUTES'],
